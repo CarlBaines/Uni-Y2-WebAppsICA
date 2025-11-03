@@ -14,7 +14,7 @@ namespace Apex.Venues.Controllers
         {
             _context = context;
         }
-
+            
         // GET: api/EventTypes
         [HttpGet]
         public async Task<IActionResult> GetEventTypes()
