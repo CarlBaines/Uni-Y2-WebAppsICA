@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Apex.Venues.Data.Migrations
 {
     [DbContext(typeof(VenuesDbContext))]
-    [Migration("20251030053308_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251106113519_NewCreate")]
+    partial class NewCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,457 +42,457 @@ namespace Apex.Venues.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Date = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 6, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 51.789999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 11, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 46.770000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 11, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 72.069999999999993
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 12, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 57.18
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 12, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 91.030000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 13, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 61.130000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 14, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 139.55000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 19, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 96.379999999999995
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 21, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 92.689999999999998
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 23, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 59.859999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 23, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 95.010000000000005
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 26, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 57.450000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 27, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 55.439999999999998
                         },
                         new
                         {
-                            Date = new DateTime(2026, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 27, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 79.260000000000005
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 28, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 80.489999999999995
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 29, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 97.650000000000006
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 1, 31, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 57.399999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 1, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 58.020000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 2, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 50.630000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 2, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 78.489999999999995
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 3, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 94.670000000000002
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 4, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 32.43
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 6, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 68.049999999999997
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 7, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 92.519999999999996
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 8, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 53.119999999999997
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 9, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 49.280000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 9, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 104.76000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 11, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 30.91
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 12, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 99.439999999999998
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 13, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 69.359999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 14, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 76.140000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 15, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 64.019999999999996
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 16, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 51.479999999999997
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 16, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 112.88
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 17, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 109.15000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 18, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 115.89
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 19, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 64.030000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 20, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 53.840000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 21, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 40.109999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 21, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 92.319999999999993
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 21, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 76.810000000000002
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 22, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 43.719999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 22, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 80.659999999999997
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 25, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 42.299999999999997
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 26, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 51.560000000000002
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 26, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 87.870000000000005
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 27, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 48.590000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 2, 28, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 84.980000000000004
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 1, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 35.850000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 1, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 80.769999999999996
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 1, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 83.709999999999994
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 2, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 91.530000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 2, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 132.13
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 3, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 104.41
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 4, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 114.65000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 6, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 50.390000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 6, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 95.829999999999998
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 8, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 62.539999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 10, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 78.430000000000007
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 18, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 77.700000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 22, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 33.030000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 23, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 110.11
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 24, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 77.640000000000001
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 26, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 130.16999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 27, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 35.670000000000002
                         },
                         new
                         {
-                            Date = new DateTime(2026, 3, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 27, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 101.31999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 28, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 53.219999999999999
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 30, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 74.150000000000006
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 3, 30, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 102.22
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 4, 1, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 44.049999999999997
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 4, 2, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 99.879999999999995
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 4, 3, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 115.3
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 4, 4, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 53.810000000000002
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 4, 4, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "CRKHL",
                             CostPerHour = 72.340000000000003
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 4, 5, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "FDLCK",
                             CostPerHour = 52.939999999999998
                         },
                         new
                         {
-                            Date = new DateTime(2026, 4, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2026, 4, 5, 11, 35, 17, 910, DateTimeKind.Local).AddTicks(6072),
                             VenueCode = "TNDMR",
                             CostPerHour = 112.63
                         });
