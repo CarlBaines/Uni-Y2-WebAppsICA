@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Apex.Catering.Data.Migrations
 {
     [DbContext(typeof(CateringDbContext))]
-    [Migration("20251106124347_InitialCreate")]
+    [Migration("20251106184633_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

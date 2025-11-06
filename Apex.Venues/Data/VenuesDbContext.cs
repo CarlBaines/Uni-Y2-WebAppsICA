@@ -26,7 +26,13 @@ namespace Apex.Venues.Data
 
             var folder = Environment.SpecialFolder.MyDocuments;
             var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "Apex.Venues.db");
+            DbPath = Path.Combine(path, "C# Databases/ICA Databases", "Apex.Venues.db");
+
+            var dir = Path.GetDirectoryName(DbPath);
+            if (!string.IsNullOrWhiteSpace(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
