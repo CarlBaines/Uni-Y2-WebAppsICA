@@ -44,6 +44,7 @@ namespace Apex.Catering.Data
                 .IsRequired();
 
             // Models the many-to-many relationship between Menu and FoodItem via MenuFoodItem
+            // Composite primary key
             modelBuilder.Entity<MenuFoodItem>()
                 .HasKey(mfi => new { mfi.MenuId, mfi.FoodItemId });
 
