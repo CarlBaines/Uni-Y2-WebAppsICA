@@ -97,20 +97,19 @@ namespace Apex.Catering.Controllers
             return CreatedAtAction("GetMenuFoodItem", new { id = menuFoodItem.MenuId }, menuFoodItem);
         }
 
-        // DELETE: api/MenuFoodItems/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMenuFoodItem(int id)
+        // DELETE: api/MenuFoodItems/5/1
+        [HttpDelete("{MenuId}/{FoodItemId}")]
+        public async Task<IActionResult> DeleteMenuFoodItem(int MenuId, int FoodItemId)
         {
-            var menuFoodItem = await _context.MenuFoodItems.FindAsync(id);
+            var menuFoodItem = await _context.MenuFoodItems.FindAsync(MenuId, FoodItemId);
             if (menuFoodItem == null)
             {
                 return NotFound();
             }
-
             _context.MenuFoodItems.Remove(menuFoodItem);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok($"Link between Menu {MenuId} and FoodItem {FoodItemId} has been removed!");
         }
 
         private bool MenuFoodItemExists(int id)
