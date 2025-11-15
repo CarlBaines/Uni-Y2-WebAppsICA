@@ -52,13 +52,13 @@ namespace Apex.Catering.Data
                 .HasOne<Menu>()
                 .WithMany()
                 .HasForeignKey(mfi => mfi.MenuId)
-                .OnDelete(DeleteBehavior.Cascade); // Prevents cascade delete
+                .OnDelete(DeleteBehavior.Cascade); // Implements cascade delete
 
             modelBuilder.Entity<MenuFoodItem>()
                 .HasOne<FoodItem>()
                 .WithMany()
                 .HasForeignKey(mfi => mfi.FoodItemId)
-                .OnDelete(DeleteBehavior.Cascade); // Prevents cascade delete
+                .OnDelete(DeleteBehavior.Cascade); // Implements cascade delete
 
             // Insert seed data for Menus
             modelBuilder.Entity<Menu>().HasData(
