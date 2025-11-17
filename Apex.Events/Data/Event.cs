@@ -1,0 +1,23 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Apex.Events.Data
+{
+    public class Event
+    {
+        // Attributes
+        [Required]
+        public int EventId { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string EventName { get; set; } = string.Empty;
+
+        // Navigation property to the Staffing entity.
+        public List<Staffing>? Staffings { get; set; }
+        // Navigation property to the GuestBooking entity.
+        public List<GuestBooking>? GuestBookings { get; set; }
+        // Constructor
+        public Event()
+        {
+        }
+    }
+}
