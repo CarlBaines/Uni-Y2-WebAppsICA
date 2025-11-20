@@ -13,6 +13,10 @@ namespace Apex.Events.Data
         [Required]
         // Foreign key to the Staff entity.
         public int EventStaffId { get; set; }
+        // Foreign key to the Event entity.
+        public int EventId { get; set; }
+        // Navigation property to the Event entity.
+        public Event? Event { get; set; }
         // Navigation property to the Staff entity.
         public Staff? Staff { get; set; }
 

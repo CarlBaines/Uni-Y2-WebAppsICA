@@ -9,8 +9,8 @@ namespace Apex.Events.Data
         // Foreign key to the Guest entity.
         [Required]
         public int GuestId { get; set; }
-        /* More Attributes */
-
+        [Required]
+        public int EventId { get; set; }
         // Navigation property to the Guest entity.
         public Guest? Guest { get; set; }
         // Navigation property to the Event entity.
