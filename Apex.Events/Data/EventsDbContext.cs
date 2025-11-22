@@ -70,38 +70,6 @@ namespace Apex.Events.Data
                 .HasForeignKey(st => st.EventId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict); // Prevents cascade delete
-
-            // Insert seed data for guest bookings
-            modelBuilder.Entity<GuestBooking>().HasData(
-                new GuestBooking { GuestBookingId = 1, GuestId = 1, EventId = 1 },
-                new GuestBooking { GuestBookingId = 2, GuestId = 2, EventId = 1 },
-                new GuestBooking { GuestBookingId = 3, GuestId = 3, EventId = 2 }
-            );
-
-            // Insert seed data for guests
-            modelBuilder.Entity<Guest>().HasData(
-                new Guest { GuestId = 1, FirstName = "Alice", LastName = "Johnson" },
-                new Guest { GuestId = 2, FirstName = "Bob", LastName = "Smith" },
-                new Guest { GuestId = 3, FirstName = "Charlie", LastName = "Brown" }
-            );
-
-            // Insert seed data for events
-            modelBuilder.Entity<Event>().HasData(
-                new Event { EventId = 1, EventName = "Annual Conference" },
-                new Event { EventId = 2, EventName = "Networking Gala" }
-            );
-
-            // Insert seed data for staff
-            modelBuilder.Entity<Staff>().HasData(
-                new Staff { EventStaffId = 1, FirstName = "David", LastName = "Wilson", Role = "Coordinator" },
-                new Staff { EventStaffId = 2, FirstName = "Eva", LastName = "Davis", Role = "Assistant" }
-            );
-
-            // Insert seed data for staffings
-            modelBuilder.Entity<Staffing>().HasData(
-                new Staffing { StaffingId = 1, EventStaffId = 1, EventId = 1, StaffingName = "Conference Coordination" },
-                new Staffing { StaffingId = 2, EventStaffId = 2, EventId = 2, StaffingName = "Gala Assistance" }
-            );
         }
     }
 }
