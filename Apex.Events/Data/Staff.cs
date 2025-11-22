@@ -5,6 +5,7 @@ namespace Apex.Events.Data
     public class Staff
     {
         // Attributes
+        [Key]
         [Required]
         public int EventStaffId { get; set; }
         [MaxLength(50)]

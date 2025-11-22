@@ -36,6 +36,9 @@ namespace Apex.Events.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Staff>().HasKey(s => s.EventStaffId);
+
             // Models the many-to-one relationship between GuestBookings and Guests.
             modelBuilder.Entity<GuestBooking>()
                 .HasOne(gb => gb.Guest)
@@ -90,14 +93,14 @@ namespace Apex.Events.Data
 
             // Insert seed data for staff
             modelBuilder.Entity<Staff>().HasData(
-                new Staff { EventStaffId = 1, FirstName = "David", LastName = "Wilson" },
-                new Staff { EventStaffId = 2, FirstName = "Eva", LastName = "Davis" }
+                new Staff { EventStaffId = 1, FirstName = "David", LastName = "Wilson", Role = "Coordinator" },
+                new Staff { EventStaffId = 2, FirstName = "Eva", LastName = "Davis", Role = "Assistant" }
             );
 
             // Insert seed data for staffings
             modelBuilder.Entity<Staffing>().HasData(
-                new Staffing { StaffingId = 1, EventStaffId = 1, EventId = 1 },
-                new Staffing { StaffingId = 2, EventStaffId = 2, EventId = 2 }
+                new Staffing { StaffingId = 1, EventStaffId = 1, EventId = 1, StaffingName = "Conference Coordination" },
+                new Staffing { StaffingId = 2, EventStaffId = 2, EventId = 2, StaffingName = "Gala Assistance" }
             );
         }
     }
