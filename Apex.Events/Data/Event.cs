@@ -10,7 +10,11 @@ namespace Apex.Events.Data
         [Required]
         [MaxLength(50)]
         public string EventName { get; set; } = string.Empty;
-
+        [DataType(DataType.Date)]
+        public DateOnly EventDate { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string EventType { get; set; } = string.Empty;
         // Navigation property to the Staffing entity.
         public List<Staffing>? Staffings { get; set; }
         // Navigation property to the GuestBooking entity.

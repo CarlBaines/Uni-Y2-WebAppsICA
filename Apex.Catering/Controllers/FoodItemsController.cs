@@ -21,14 +21,14 @@ namespace Apex.Catering.Controllers
         }
 
         // GET: api/FoodItems
-        [HttpGet]
+        [HttpGet("/api/GetFoodItem")]
         public async Task<ActionResult<IEnumerable<FoodItem>>> GetFoodItems()
         {
             return await _context.FoodItems.ToListAsync();
         }
 
         // GET: api/FoodItems/5
-        [HttpGet("{id}")]
+        [HttpGet("/api/GetFoodItem/{id}")]
         public async Task<ActionResult<FoodItem>> GetFoodItem(int id)
         {
             var foodItem = await _context.FoodItems.FindAsync(id);
@@ -43,7 +43,7 @@ namespace Apex.Catering.Controllers
 
         // PUT: api/FoodItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("/api/PutFoodItem{id}")]
         public async Task<IActionResult> PutFoodItem(int id, FoodItem foodItem)
         {
             if (id != foodItem.FoodItemId)
@@ -74,7 +74,7 @@ namespace Apex.Catering.Controllers
 
         // POST: api/FoodItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("/api/PostFoodItem")]
         public async Task<ActionResult<FoodItem>> PostFoodItem(FoodItem foodItem)
         {
             _context.FoodItems.Add(foodItem);
@@ -84,7 +84,7 @@ namespace Apex.Catering.Controllers
         }
 
         // DELETE: api/FoodItems/5
-        [HttpDelete("{id}")]
+        [HttpDelete("/api/DeleteFoodItem/{id}")]
         public async Task<IActionResult> DeleteFoodItem(int id)
         {
             var foodItem = await _context.FoodItems.FindAsync(id);

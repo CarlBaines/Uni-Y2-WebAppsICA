@@ -21,14 +21,14 @@ namespace Apex.Catering.Controllers
         }
 
         // GET: api/Menus
-        [HttpGet]
+        [HttpGet("/api/GetMenu")]
         public async Task<ActionResult<IEnumerable<Menu>>> GetMenus()
         {
             return await _context.Menus.ToListAsync();
         }
 
         // GET: api/Menus/5
-        [HttpGet("{id}")]
+        [HttpGet("/api/GetMenu/{id}")]
         public async Task<ActionResult<Menu>> GetMenu(int id)
         {
             var menu = await _context.Menus.FindAsync(id);
@@ -43,7 +43,7 @@ namespace Apex.Catering.Controllers
 
         // PUT: api/Menus/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("/api/PutMenu/{id}")]
         public async Task<IActionResult> PutMenu(int id, Menu menu)
         {
             if (id != menu.MenuId)
@@ -74,7 +74,7 @@ namespace Apex.Catering.Controllers
 
         // POST: api/Menus
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("/api/PostMenu")]
         public async Task<ActionResult<Menu>> PostMenu(Menu menu)
         {
             _context.Menus.Add(menu);
@@ -84,7 +84,7 @@ namespace Apex.Catering.Controllers
         }
 
         // DELETE: api/Menus/5
-        [HttpDelete("{id}")]
+        [HttpDelete("/api/DeleteMenu/{id}")]
         public async Task<IActionResult> DeleteMenu(int id)
         {
             var menu = await _context.Menus.FindAsync(id);

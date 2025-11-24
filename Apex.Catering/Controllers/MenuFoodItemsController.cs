@@ -21,14 +21,14 @@ namespace Apex.Catering.Controllers
         }
 
         // GET: api/MenuFoodItems
-        [HttpGet]
+        [HttpGet("/api/GetMenuFoodItem")]
         public async Task<ActionResult<IEnumerable<MenuFoodItem>>> GetMenuFoodItems()
         {
             return await _context.MenuFoodItems.ToListAsync();
         }
 
         // GET: api/MenuFoodItems/5
-        [HttpGet("{id}")]
+        [HttpGet("/api/GetMenuFoodItem/{id}")]
         public async Task<ActionResult<MenuFoodItem>> GetMenuFoodItem(int id)
         {
             var menuFoodItem = await _context.MenuFoodItems.FindAsync(id);
@@ -43,7 +43,7 @@ namespace Apex.Catering.Controllers
 
         // PUT: api/MenuFoodItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("/api/PutMenuFoodItem/{id}")]
         public async Task<IActionResult> PutMenuFoodItem(int id, MenuFoodItem menuFoodItem)
         {
             if (id != menuFoodItem.MenuId)
@@ -74,7 +74,7 @@ namespace Apex.Catering.Controllers
 
         // POST: api/MenuFoodItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("/api/PostMenuFoodItem")]
         public async Task<ActionResult<MenuFoodItem>> PostMenuFoodItem(MenuFoodItem menuFoodItem)
         {
             _context.MenuFoodItems.Add(menuFoodItem);
@@ -98,7 +98,7 @@ namespace Apex.Catering.Controllers
         }
 
         // DELETE: api/MenuFoodItems/5/1
-        [HttpDelete("{MenuId}/{FoodItemId}")]
+        [HttpDelete("/api/DeleteMenuFoodItem/{MenuId}/{FoodItemId}")]
         public async Task<IActionResult> DeleteMenuFoodItem(int MenuId, int FoodItemId)
         {
             var menuFoodItem = await _context.MenuFoodItems.FindAsync(MenuId, FoodItemId);
