@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace Apex.Events.Data
 {
@@ -13,7 +14,8 @@ namespace Apex.Events.Data
 
         public void Initialise()
         {
-            _context.Database.EnsureCreated();
+            // This will apply any pending migrations for the context to the database.
+            _context.Database.Migrate();
             // Check if there are any events in the database.
             if (_context.Events.Any())
             {
@@ -23,9 +25,9 @@ namespace Apex.Events.Data
             // Seed Events
             var events = new[]
             {
-                new Event { EventId = 1, EventName = "Annual Conference" },
-                new Event { EventId = 2, EventName = "Networking Gala" },
-                new Event { EventId = 3, EventName = "Tech Expo" }
+                new Event { EventId = 1, EventName = "Annual Conference", EventDate = new DateOnly(2025, 5, 12), EventType = "Conference" },
+                new Event { EventId = 2, EventName = "Networking Gala", EventDate = new DateOnly(2025, 6, 20), EventType = "Gala" },
+                new Event { EventId = 3, EventName = "Tech Expo", EventDate = new DateOnly(2025, 9, 3), EventType = "Expo" }
             };
             _context.Events.AddRange(events);
 

@@ -10,6 +10,7 @@ namespace Apex.Events.Data
         [Required]
         [MaxLength(50)]
         public string EventName { get; set; } = string.Empty;
+        [Required]
         [DataType(DataType.Date)]
         public DateOnly EventDate { get; set; }
         [Required]
