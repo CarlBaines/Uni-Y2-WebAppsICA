@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Apex.Events.Data;
+using System.ComponentModel.DataAnnotations;
+using Apex.Events.Data.Migrations;
 
 namespace Apex.Events.Pages.Events
 {
@@ -19,8 +21,17 @@ namespace Apex.Events.Pages.Events
             _context = context;
         }
 
+        // This event is for display purposes only. It is not bound on POST.
+        public Event? Event { get; set; }
+
         [BindProperty]
-        public Event Event { get; set; } = default!;
+        public int EventId { get; set; }
+
+        [BindProperty]
+        [Required]
+        [MaxLength(50)]
+        // This property is bound on POST to allow editing of the EventName.
+        public string EventName { get; set; } = string.Empty;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,7 +45,11 @@ namespace Apex.Events.Pages.Events
             {
                 return NotFound();
             }
+            // Set the Event property for display
+            // and initialise the bound properties.
             Event = evt;
+            EventId = evt.EventId;
+            EventName = evt.EventName;
             return Page();
         }
 
@@ -44,10 +59,19 @@ namespace Apex.Events.Pages.Events
         {
             if (!ModelState.IsValid)
             {
+                // If the model state is invalid, re-fetch the Event for display.
+                Event = await _context.Events.FirstOrDefaultAsync(m => m.EventId == EventId);
                 return Page();
             }
 
-            _context.Attach(Event).State = EntityState.Modified;
+            var evt = await _context.Events.FirstOrDefaultAsync(m => m.EventId == EventId);
+            if(evt == null)
+            {
+                return NotFound();
+            }
+
+            // Updates only the EventName property.
+            evt.EventName = EventName;
 
             try
             {
@@ -55,14 +79,13 @@ namespace Apex.Events.Pages.Events
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EventExists(Event.EventId))
+                // Check if the event still exists
+                if (!_context.Events.Any(e => e.EventId == EventId))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return RedirectToPage("./Index");

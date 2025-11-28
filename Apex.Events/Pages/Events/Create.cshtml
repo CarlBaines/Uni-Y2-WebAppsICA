@@ -22,9 +22,11 @@
                 <label asp-for="Event.EventDate" class="control-label"></label>
                 <input asp-for="Event.EventDate" class="form-label" />
                 <span asp-validation-for="Event.EventDate" class="text-danger"></span>
-				<br />
+                <br />
                 <label asp-for="Event.EventType" class="control-label"></label>
-                <input asp-for="Event.EventType" class="control-label" />
+                <select asp-for="Event.EventType" class="form-control" asp-items="Model.EventTypeItems">
+                    <option value="">-- Select event type --</option>
+                </select>
                 <span asp-validation-for="Event.EventType" class="text-danger"></span>
             </div>
             <div class="form-group">

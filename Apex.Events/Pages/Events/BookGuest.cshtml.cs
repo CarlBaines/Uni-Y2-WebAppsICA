@@ -6,29 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Apex.Events.Data;
-using Apex.Events.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace Apex.Events.Pages.Events
 {
-    public class CreateModel : PageModel
+    public class BookGuestModel : PageModel
     {
         private readonly Apex.Events.Data.EventsDbContext _context;
-        private readonly EventTypesService _eventTypesService;
 
-        public List<SelectListItem> EventTypeItems { get; set; } = [];
-
-        public CreateModel(Apex.Events.Data.EventsDbContext context, EventTypesService eventTypesService)
+        public BookGuestModel(Apex.Events.Data.EventsDbContext context)
         {
             _context = context;
-            _eventTypesService = eventTypesService;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public IActionResult OnGet()
         {
-            // Populate EventTypes dropdown
-            EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
-
             return Page();
         }
 
@@ -40,8 +31,6 @@ namespace Apex.Events.Pages.Events
         {
             if (!ModelState.IsValid)
             {
-                // Populate EventTypes dropdown
-                EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
                 return Page();
             }
 

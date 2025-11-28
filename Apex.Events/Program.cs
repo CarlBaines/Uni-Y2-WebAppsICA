@@ -1,4 +1,5 @@
 using Apex.Events.Data;
+using Apex.Events.Services;
 using System.Runtime.CompilerServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<EventsDbContext>();
 // Register the database initialiser
 builder.Services.AddScoped<DbTestDataInitialiser>();
+
+builder.Services.AddHttpClient<EventTypesService>(httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://localhost:7088/");
+});
 
 var app = builder.Build();
 

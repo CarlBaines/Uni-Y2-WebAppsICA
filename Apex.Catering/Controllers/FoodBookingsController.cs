@@ -99,7 +99,16 @@ namespace Apex.Catering.Controllers
                 _context.FoodBookings.Add(newBooking);
                 await _context.SaveChangesAsync();
                 // Returns the newly created food booking. Status code 201.
-                return CreatedAtAction("GetFoodBooking", new { id = newBooking.FoodBookingId });
+                return CreatedAtAction(nameof(GetFoodBooking), new { id = newBooking.FoodBookingId },
+                    // Return the food booking data transfer object.
+                    new FoodBookingDTO
+                    {
+                        FoodBookingId = newBooking.FoodBookingId,
+                        ClientReferenceId = newBooking.ClientReferenceId,
+                        NumberOfGuests = newBooking.NumberOfGuests,
+                        MenuId = newBooking.MenuId
+                    }
+                );
             }
             else {
                 // else return bad request status code 400.
