@@ -40,6 +40,17 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+// Minimal API for Catering validation: GET api/Events/{id}
+app.MapGet("api/Events/{id:int}", async(int id, EventsDbContext db) =>
+{
+    var evt = await db.Events.FindAsync(id);
+    if(evt == null)
+    {
+        return Results.NotFound(new { message = $"Event {id} not found" });
+    }
+    return Results.Ok(evt);
+});
+
 app.Run();
 
 void AddSeedData(IHost host)

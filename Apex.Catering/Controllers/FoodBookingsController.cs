@@ -16,22 +16,34 @@ namespace Apex.Catering.Controllers
     public class FoodBookingsController : ControllerBase
     {
         private readonly CateringDbContext _context;
+        private readonly HttpClient _httpClient;
 
-        public FoodBookingsController(CateringDbContext context)
+        public FoodBookingsController(CateringDbContext context, HttpClient httpClient)
         {
             _context = context;
+            _httpClient = httpClient;
         }
 
         // GET: api/FoodBookings
-        [HttpGet("/api/GetFoodBooking")]
-        public async Task<ActionResult<IEnumerable<FoodBooking>>> GetFoodBookings()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<FoodBookingDTO>>> GetFoodBookings()
         {
-            return await _context.FoodBookings.ToListAsync();
+            //return await _context.FoodBookings.ToListAsync();
+            var foodBookings = await _context.FoodBookings
+                .Select(fb => new FoodBookingDTO
+                {
+                    FoodBookingId = fb.FoodBookingId,
+                    EventId = fb.EventId,
+                    ClientReferenceId = fb.ClientReferenceId,
+                    NumberOfGuests = fb.NumberOfGuests,
+                    MenuId = fb.MenuId
+                }).ToListAsync();
+            return foodBookings;
         }
 
         // GET: api/FoodBookings/5
-        [HttpGet("/api/GetFoodBooking/{id}")]
-        public async Task<ActionResult<FoodBooking>> GetFoodBooking(int id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<FoodBookingDTO>> GetFoodBooking(int id)
         {
             var foodBooking = await _context.FoodBookings.FindAsync(id);
 
@@ -40,47 +52,75 @@ namespace Apex.Catering.Controllers
                 return NotFound();
             }
 
-            return foodBooking;
+            return new FoodBookingDTO
+            {
+                FoodBookingId = foodBooking.FoodBookingId,
+                EventId = foodBooking.EventId,
+                ClientReferenceId = foodBooking.ClientReferenceId,
+                NumberOfGuests = foodBooking.NumberOfGuests,
+                MenuId = foodBooking.MenuId
+            };
         }
 
         // PUT: api/FoodBookings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("/api/PutFoodBooking/{id}")]
-        public async Task<IActionResult> PutFoodBooking(int id, FoodBooking foodBooking)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> PutFoodBooking(int id, FoodBookingDTO foodBookingDto)
         {
-            if (id != foodBooking.FoodBookingId)
+            if (id != foodBookingDto.FoodBookingId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(foodBooking).State = EntityState.Modified;
-
-            try
+            // Check if the food booking exists
+            var existing = await _context.FoodBookings.FindAsync(id);
+            if (existing == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+            // Checks if the menu id exists in the menus database context.
+            if (existing.MenuId != foodBookingDto.MenuId)
             {
-                if (!FoodBookingExists(id))
+                var menu = await _context.Menus.FindAsync(foodBookingDto.MenuId);
+                if(menu == null)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
+                    return BadRequest();
                 }
             }
 
+            if(existing.EventId != foodBookingDto.EventId)
+            {
+                var eventApiResponse = await _httpClient.GetAsync($"api/Events/{foodBookingDto.EventId}");
+                if (!eventApiResponse.IsSuccessStatusCode)
+                {
+                    return NotFound(new { message = $"Event {foodBookingDto.EventId} not found in Apex.Events." });
+                }
+            }
+
+            existing.EventId = foodBookingDto.EventId;
+            existing.ClientReferenceId = foodBookingDto.ClientReferenceId;
+            existing.NumberOfGuests = foodBookingDto.NumberOfGuests;
+            existing.MenuId = foodBookingDto.MenuId;
+
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
         // POST: api/FoodBookings
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("/api/PostFoodBooking")]
-        public async Task<ActionResult<FoodBooking>> PostFoodBooking(FoodBookingDTO foodBooking)
+        [HttpPost]
+        public async Task<ActionResult<FoodBookingDTO>> PostFoodBooking(FoodBookingDTO foodBooking)
         {
             // Check if the food booking menu id exists in the menus database context.
             var menuExists = await _context.Menus.FindAsync(foodBooking.MenuId);
+
+            // Validate events via Events service API.
+            var eventApiResponse = await _httpClient.GetAsync($"api/Events/{foodBooking.EventId}");
+            if (!eventApiResponse.IsSuccessStatusCode)
+            {
+                return NotFound();
+            }
+
             // Check if the food booking menu id; client reference id exist as well as checking if there is a valid number of guests input.
             if (menuExists != null && foodBooking.ClientReferenceId != null && foodBooking.NumberOfGuests > 0)
             {
@@ -91,6 +131,7 @@ namespace Apex.Catering.Controllers
                 // Creates a new food booking object.
                 FoodBooking newBooking = new FoodBooking()
                 {
+                    EventId = foodBooking.EventId,
                     ClientReferenceId = (int)foodBooking.ClientReferenceId,
                     MenuId = foodBooking.MenuId,
                     NumberOfGuests = foodBooking.NumberOfGuests
@@ -104,6 +145,7 @@ namespace Apex.Catering.Controllers
                     new FoodBookingDTO
                     {
                         FoodBookingId = newBooking.FoodBookingId,
+                        EventId = newBooking.EventId,
                         ClientReferenceId = newBooking.ClientReferenceId,
                         NumberOfGuests = newBooking.NumberOfGuests,
                         MenuId = newBooking.MenuId
@@ -117,7 +159,7 @@ namespace Apex.Catering.Controllers
         }
 
         // DELETE: api/FoodBookings/5
-        [HttpDelete("/api/DeleteFoodBooking/{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteFoodBooking(int id)
         {
             var foodBooking = await _context.FoodBookings.FindAsync(id);
@@ -130,11 +172,6 @@ namespace Apex.Catering.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool FoodBookingExists(int id)
-        {
-            return _context.FoodBookings.Any(e => e.FoodBookingId == id);
         }
     }
 }

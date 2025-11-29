@@ -7,6 +7,8 @@ namespace Apex.Catering.Data
         [Required]
         public int FoodBookingId { get; set; }
         [Required]
+        public int EventId { get; set; }
+        [Required]
         public int ClientReferenceId { get; set; }
         [Required]
         public int NumberOfGuests { get; set; }
