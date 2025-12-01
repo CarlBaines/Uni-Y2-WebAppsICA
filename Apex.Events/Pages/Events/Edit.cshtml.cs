@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Apex.Events.Data;
 using System.ComponentModel.DataAnnotations;
-using Apex.Events.Data.Migrations;
 
 namespace Apex.Events.Pages.Events
 {

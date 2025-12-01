@@ -10,10 +10,13 @@ builder.Services.AddSwaggerGen();
 
 // Register database context with the framework
 builder.Services.AddDbContext<CateringDbContext>();
+builder.Services.AddScoped<DbTestDataInitialiser>();
 
-builder.Services.AddSingleton(new HttpClient
+// Register named HttpClient for accessing Events API
+builder.Services.AddHttpClient("Events", httpClient =>
 {
-    BaseAddress = new Uri("https://localhost:7011/")
+    var baseUrl = "https://localhost:7011/";
+    httpClient.BaseAddress = new Uri(baseUrl);
 });
 
 var app = builder.Build();
@@ -21,6 +24,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    AddSeedData(app);
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -32,3 +36,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void AddSeedData(IHost host)
+{
+    using var scope = host.Services.CreateScope();
+    var dbInitialiser = scope.ServiceProvider.GetRequiredService<DbTestDataInitialiser>();
+    dbInitialiser.Initialise();
+}   

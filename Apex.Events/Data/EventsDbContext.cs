@@ -45,7 +45,7 @@ namespace Apex.Events.Data
                 .WithMany(gb => gb.GuestBookings)
                 .HasForeignKey(gb => gb.GuestId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict); // Prevents cascade delete
+                .OnDelete(DeleteBehavior.Cascade); // Implements cascade delete
 
             // Models the many-to-one relationshop between GuestBookings and Events.
             modelBuilder.Entity<GuestBooking>()
@@ -53,7 +53,7 @@ namespace Apex.Events.Data
                 .WithMany(gb => gb.GuestBookings)
                 .HasForeignKey(gb => gb.EventId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict); // Prevents cascade delete
+                .OnDelete(DeleteBehavior.Cascade); // Implements cascade delete
 
             // Models the many-to-one relationship between Staffing and Staff.
             modelBuilder.Entity<Staffing>()
@@ -61,7 +61,7 @@ namespace Apex.Events.Data
                 .WithMany(st => st.Staffings)
                 .HasForeignKey(st => st.EventStaffId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict); // Prevents cascade delete
+                .OnDelete(DeleteBehavior.Cascade); // Implements cascade delete
 
             // Models the many-to-one relationship between Staffing and Events.
             modelBuilder.Entity<Staffing>()
@@ -69,7 +69,7 @@ namespace Apex.Events.Data
                 .WithMany(st => st.Staffings)
                 .HasForeignKey(st => st.EventId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict); // Prevents cascade delete
+                .OnDelete(DeleteBehavior.Cascade); // Implements cascade delete
         }
     }
 }

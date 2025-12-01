@@ -59,34 +59,6 @@ namespace Apex.Catering.Data
                 .WithMany()
                 .HasForeignKey(mfi => mfi.FoodItemId)
                 .OnDelete(DeleteBehavior.Cascade); // Implements cascade delete
-
-            // Insert seed data for Menus
-            modelBuilder.Entity<Menu>().HasData(
-                new Menu { MenuId = 1, MenuName = "Conference Menu" },
-                new Menu { MenuId = 2, MenuName = "Party Menu" },
-                new Menu { MenuId = 3, MenuName = "Wedding Menu" }
-            );
-
-            // Insert seed data for food bookings
-            modelBuilder.Entity<FoodBooking>().HasData(
-                new FoodBooking { FoodBookingId = 1, ClientReferenceId = 1001, NumberOfGuests = 50, MenuId = 1 },
-                new FoodBooking { FoodBookingId = 2, ClientReferenceId = 1002, NumberOfGuests = 100, MenuId = 2 },
-                new FoodBooking { FoodBookingId = 3, ClientReferenceId = 1003, NumberOfGuests = 200, MenuId = 3 }
-            );
-
-            // Insert seed data for FoodItems
-            modelBuilder.Entity<FoodItem>().HasData(
-                new FoodItem { FoodItemId = 1, Description = "Chicken Sandwich", UnitPrice = 5.99 },
-                new FoodItem { FoodItemId = 2, Description = "Veggie Wrap", UnitPrice = 4.99 },
-                new FoodItem { FoodItemId = 3, Description = "Caesar Salad", UnitPrice = 3.99 }
-            );
-
-            // Insert seed data for MenuFoodItems
-            modelBuilder.Entity<MenuFoodItem>().HasData(
-                new MenuFoodItem { MenuId = 1, FoodItemId = 3},
-                new MenuFoodItem { MenuId = 2, FoodItemId = 1},
-                new MenuFoodItem { MenuId = 2, FoodItemId = 2}
-            );
         }
     }
 }

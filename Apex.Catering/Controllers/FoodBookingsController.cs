@@ -16,12 +16,12 @@ namespace Apex.Catering.Controllers
     public class FoodBookingsController : ControllerBase
     {
         private readonly CateringDbContext _context;
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public FoodBookingsController(CateringDbContext context, HttpClient httpClient)
+        public FoodBookingsController(CateringDbContext context, IHttpClientFactory httpClientFactory)
         {
             _context = context;
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
         // GET: api/FoodBookings
@@ -90,10 +90,13 @@ namespace Apex.Catering.Controllers
 
             if(existing.EventId != foodBookingDto.EventId)
             {
-                var eventApiResponse = await _httpClient.GetAsync($"api/Events/{foodBookingDto.EventId}");
+                // Store Events named http client.
+                var client = _httpClientFactory.CreateClient("Events");
+                // Check if the event id exists via Events API.
+                var eventApiResponse = await client.GetAsync($"api/Events/{foodBookingDto.EventId}");
                 if (!eventApiResponse.IsSuccessStatusCode)
                 {
-                    return NotFound(new { message = $"Event {foodBookingDto.EventId} not found in Apex.Events." });
+                    return NotFound();
                 }
             }
 
@@ -103,7 +106,8 @@ namespace Apex.Catering.Controllers
             existing.MenuId = foodBookingDto.MenuId;
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            // Return confirmation with the FoodBookingId.
+            return Ok(new { existing.FoodBookingId });
         }
 
         // POST: api/FoodBookings
@@ -115,14 +119,15 @@ namespace Apex.Catering.Controllers
             var menuExists = await _context.Menus.FindAsync(foodBooking.MenuId);
 
             // Validate events via Events service API.
-            var eventApiResponse = await _httpClient.GetAsync($"api/Events/{foodBooking.EventId}");
+            var client = _httpClientFactory.CreateClient("Events");
+            var eventApiResponse = await client.GetAsync($"api/Events/{foodBooking.EventId}");
             if (!eventApiResponse.IsSuccessStatusCode)
             {
                 return NotFound();
             }
 
-            // Check if the food booking menu id; client reference id exist as well as checking if there is a valid number of guests input.
-            if (menuExists != null && foodBooking.ClientReferenceId != null && foodBooking.NumberOfGuests > 0)
+            // Check if the food booking menu id exists as well as checking if there is a valid number of guests input.
+            if (menuExists != null && foodBooking.NumberOfGuests > 0)
             {
                 // Check if the client has an existing booking for the same menu.
                 if (_context.FoodBookings.Any(fb => fb.ClientReferenceId == foodBooking.ClientReferenceId && fb.MenuId == foodBooking.MenuId)){
@@ -171,7 +176,8 @@ namespace Apex.Catering.Controllers
             _context.FoodBookings.Remove(foodBooking);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            // Confirm deletion with the FoodBookingId.
+            return Ok(new { FoodBookingId = id });
         }
     }
 }
