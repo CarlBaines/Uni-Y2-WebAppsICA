@@ -17,7 +17,7 @@ namespace Apex.Events.Data
             // This will apply any pending migrations for the context to the database.
             _context.Database.Migrate();
             // Check if there are any events in the database.
-            if (_context.Events.Any())
+            if (_context.Events.Any() || _context.Guests.Any() || _context.Staff.Any() || _context.Staffings.Any() || _context.GuestBookings.Any())
             {
                 return; // Database has already been seeded.
             }
@@ -73,9 +73,9 @@ namespace Apex.Events.Data
             {
                 _context.SaveChanges();
             }
-            catch(DbUpdateException)
+            catch(DbUpdateException e)
             {
-                throw;
+                throw new InvalidOperationException($"Database seeding failed due to a database update: {e.Message}");
             }
         }
     }

@@ -32,10 +32,7 @@ namespace Apex.Events.Pages.Guests
             {
                 return NotFound();
             }
-            else
-            {
-                Guest = guest;
-            }
+            Guest = guest;
             return Page();
         }
     }

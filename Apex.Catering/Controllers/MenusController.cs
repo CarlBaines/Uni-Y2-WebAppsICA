@@ -24,7 +24,12 @@ namespace Apex.Catering.Controllers
         [HttpGet("/api/GetMenu")]
         public async Task<ActionResult<IEnumerable<Menu>>> GetMenus()
         {
-            return await _context.Menus.ToListAsync();
+            var menus = await _context.Menus.ToListAsync();
+            if(menus.Count == 0)
+            {
+                return NoContent();
+            }
+            return menus;
         }
 
         // GET: api/Menus/5
@@ -35,7 +40,12 @@ namespace Apex.Catering.Controllers
 
             if (menu == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Menu not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = $"No menu with ID {id} exists in the database."
+                });
             }
 
             return menu;
@@ -48,7 +58,12 @@ namespace Apex.Catering.Controllers
         {
             if (id != menu.MenuId)
             {
-                return BadRequest();
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = $"Route id {id} does not match the body MenuId {menu.MenuId}"
+                });
             }
 
             _context.Entry(menu).State = EntityState.Modified;
@@ -57,16 +72,23 @@ namespace Apex.Catering.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
                 if (!MenuExists(id))
                 {
-                    return NotFound();
+                    return NotFound(new ProblemDetails
+                    {
+                        Title = "Menu not found",
+                        Status = StatusCodes.Status404NotFound,
+                        Detail = $"No menu with ID {id} exists in the database."
+                    });
                 }
-                else
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
                 {
-                    throw;
-                }
+                    Title = "Menu Update Concurrency Error",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = $"Could not update the menu: {e.Message}"
+                });
             }
 
             return NoContent();
@@ -77,8 +99,21 @@ namespace Apex.Catering.Controllers
         [HttpPost("/api/PostMenu")]
         public async Task<ActionResult<Menu>> PostMenu(Menu menu)
         {
-            _context.Menus.Add(menu);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Menus.Add(menu);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Database Update Error",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = $"An error occurred while adding the menu to the database: {e.Message}"
+                });
+
+            }
 
             return CreatedAtAction("GetMenu", new { id = menu.MenuId }, menu);
         }
@@ -90,13 +125,31 @@ namespace Apex.Catering.Controllers
             var menu = await _context.Menus.FindAsync(id);
             if (menu == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Menu not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = $"No menu with ID {id} exists in the database."
+                });
             }
 
-            _context.Menus.Remove(menu);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Menus.Remove(menu);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Database Update Error",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = $"An error occurred while deleting the menu from the database: {e.Message}"
+                });
 
-            return NoContent();
+            }
+
+            return Ok(new { MenuId = id });
         }
 
         private bool MenuExists(int id)

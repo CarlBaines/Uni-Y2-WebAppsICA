@@ -32,10 +32,7 @@ namespace Apex.Events.Pages.Staffs
             {
                 return NotFound();
             }
-            else
-            {
-                Staff = staff;
-            }
+            Staff = staff;
             return Page();
         }
     }

@@ -14,7 +14,7 @@ namespace Apex.Catering.Data
         public void Initialise()
         {
             _context.Database.Migrate();
-            if (_context.Menus.Any())
+            if (_context.Menus.Any() || _context.FoodBookings.Any() || _context.FoodItems.Any() || _context.MenuFoodItems.Any())
             {
                 return; // Database has already been seeded.
             }
@@ -60,7 +60,14 @@ namespace Apex.Catering.Data
             };
             _context.MenuFoodItems.AddRange(menuFoodItems);
 
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch(DbUpdateException e)
+            {
+                throw new InvalidOperationException($"Database seeding failed due to a database update: {e.Message}");
+            }
         }
     }
 }

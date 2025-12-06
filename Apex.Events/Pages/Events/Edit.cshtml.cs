@@ -79,20 +79,20 @@ namespace Apex.Events.Pages.Events
             catch (DbUpdateConcurrencyException)
             {
                 // Check if the event still exists
-                if (!_context.Events.Any(e => e.EventId == EventId))
+                if (!await _context.Events.AnyAsync(e => e.EventId == EventId))
                 {
                     return NotFound();
                 }
-
-                throw;
+                ModelState.AddModelError(string.Empty, "The event record was modified already. Please reload and try again.");
+                return Page();
+            }
+            catch (DbUpdateException e)
+            {
+                ModelState.AddModelError(string.Empty, $"A Database Error occurred whilst editing an event: {e.Message}. Please try again.");
+                return Page();
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool EventExists(int id)
-        {
-            return _context.Events.Any(e => e.EventId == id);
         }
     }
 }

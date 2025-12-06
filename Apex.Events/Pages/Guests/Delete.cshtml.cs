@@ -34,10 +34,8 @@ namespace Apex.Events.Pages.Guests
             {
                 return NotFound();
             }
-            else
-            {
-                Guest = guest;
-            }
+            Guest = guest;
+
             return Page();
         }
 
@@ -52,8 +50,16 @@ namespace Apex.Events.Pages.Guests
             if (guest != null)
             {
                 Guest = guest;
-                _context.Guests.Remove(Guest);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Guests.Remove(Guest);
+                    await _context.SaveChangesAsync();
+                }
+                catch(DbUpdateConcurrencyException e)
+                {
+                    ModelState.AddModelError(string.Empty, $"Database Error occurred during guest deletion: {e.Message}. Please try again!");
+                    return Page();
+                }
             }
 
             return RedirectToPage("./Index");

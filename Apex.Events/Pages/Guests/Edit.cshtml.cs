@@ -59,10 +59,8 @@ namespace Apex.Events.Pages.Guests
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                ModelState.AddModelError(string.Empty, "Unable to save changes. The guest was already modified. Please reload the page and try again.");
+                return Page();
             }
 
             return RedirectToPage("./Index");

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Apex.Events.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Apex.Events.Pages.Guests
 {
@@ -34,8 +35,16 @@ namespace Apex.Events.Pages.Guests
                 return Page();
             }
 
-            _context.Guests.Add(Guest);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Guests.Add(Guest);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateConcurrencyException e)
+            {
+                ModelState.AddModelError(string.Empty, $"Database Error occurred during guest creation: {e.Message}. Please try again!");
+                return Page();
+            }
 
             return RedirectToPage("./Index");
         }

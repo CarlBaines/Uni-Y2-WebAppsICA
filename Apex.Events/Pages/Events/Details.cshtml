@@ -26,6 +26,31 @@
             @Html.DisplayFor(d => d.Event.EventDate)
         </dd>
     </dl>
+
+    <h4>Booked Guests</h4>
+    @if (Model.Event.GuestBookings is { Count: > 0 })
+    {
+        <ul>
+            @foreach(var booking in Model.Event.GuestBookings)
+            {
+                var guest = booking.Guest;
+                <li>
+                    @if (guest is not null)
+                    {
+                        @($"{guest.FirstName} {guest.LastName}".Trim())
+                    }
+                    else
+                    {
+                        @:"Unknown Guest"
+                    }
+                </li>
+            }       
+        </ul>
+    }
+    else
+    {
+        <p>No guests have booked for this event yet.</p>
+    }
 </div>
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Event.EventId">Edit</a> |

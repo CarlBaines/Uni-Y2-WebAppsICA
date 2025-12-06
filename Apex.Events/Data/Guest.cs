@@ -12,6 +12,7 @@ namespace Apex.Events.Data
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
         [MaxLength(50)]
+        [EmailAddress]
         public string Email { get; set; } = string.Empty;
         // Navigation property to the GuestBooking entity.
         public List<GuestBooking>? GuestBookings { get; set; }

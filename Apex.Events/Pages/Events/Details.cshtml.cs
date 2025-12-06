@@ -27,15 +27,22 @@ namespace Apex.Events.Pages.Events
                 return NotFound();
             }
 
-            var evt = await _context.Events.FirstOrDefaultAsync(m => m.EventId == id);
+            // Retrieve GuestBookings and associated Guests
+            var evt = await _context.Events
+                .Include(e => e.GuestBookings!)
+                .ThenInclude(gb => gb.Guest)
+                .FirstOrDefaultAsync(m => m.EventId == id);
+
             if (evt == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Event Not Found",
+                    Detail = $"No event found with ID {id}.",
+                    Status = 404
+                });
             }
-            else
-            {
-                Event = evt;
-            }
+            Event = evt;
             return Page();
         }
     }

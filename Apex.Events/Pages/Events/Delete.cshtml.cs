@@ -32,12 +32,14 @@ namespace Apex.Events.Pages.Events
 
             if (evt == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Event Not Found",
+                    Detail = $"No event found with the ID: {id}.",
+                    Status = 404,
+                });
             }
-            else
-            {
-                Event = evt;
-            }
+            Event = evt;
             return Page();
         }
 
@@ -45,15 +47,28 @@ namespace Apex.Events.Pages.Events
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Invalid Event ID",
+                    Detail = "The event ID provided is null.",
+                    Status = 404
+                });
             }
 
             var evt = await _context.Events.FindAsync(id);
             if (evt != null)
             {
                 Event = evt;
-                _context.Events.Remove(Event);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Events.Remove(Event);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException e)
+                {
+                    ModelState.AddModelError(string.Empty, $"A Database Error occurred during event deletion: {e.Message}. Please try again!");
+                    return Page();
+                }
             }
 
             return RedirectToPage("./Index");

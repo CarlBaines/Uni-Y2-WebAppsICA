@@ -21,21 +21,31 @@ namespace Apex.Catering.Controllers
         }
 
         // GET: api/FoodItems
-        [HttpGet("/api/GetFoodItem")]
+        [HttpGet("/api/FoodItems")]
         public async Task<ActionResult<IEnumerable<FoodItem>>> GetFoodItems()
         {
-            return await _context.FoodItems.ToListAsync();
+            var foodItems = await _context.FoodItems.ToListAsync();
+            if(foodItems.Count == 0)
+            {
+                return NoContent();
+            }
+            return foodItems;
         }
 
         // GET: api/FoodItems/5
-        [HttpGet("/api/GetFoodItem/{id}")]
+        [HttpGet("/api/FoodItems/{id}")]
         public async Task<ActionResult<FoodItem>> GetFoodItem(int id)
         {
             var foodItem = await _context.FoodItems.FindAsync(id);
 
             if (foodItem == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Food Item Not Found",
+                    Detail = $"No food item found with the ID: {id}.",
+                    Status = StatusCodes.Status404NotFound,
+                });
             }
 
             return foodItem;
@@ -43,12 +53,17 @@ namespace Apex.Catering.Controllers
 
         // PUT: api/FoodItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("/api/PutFoodItem{id}")]
+        [HttpPut("/api/PutFoodItem/{id}")]
         public async Task<IActionResult> PutFoodItem(int id, FoodItem foodItem)
         {
             if (id != foodItem.FoodItemId)
             {
-                return BadRequest();
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid Request",
+                    Detail = $"Route id {id} does not match the body FoodItemId {foodItem.FoodItemId}",
+                    Status = StatusCodes.Status400BadRequest,
+                });
             }
 
             _context.Entry(foodItem).State = EntityState.Modified;
@@ -57,16 +72,23 @@ namespace Apex.Catering.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
                 if (!FoodItemExists(id))
                 {
-                    return NotFound();
+                    return NotFound(new ProblemDetails
+                    {
+                        Title = "Food Item Not Found",
+                        Detail = $"No food item found with the ID: {id}.",
+                        Status = StatusCodes.Status404NotFound,
+                    });
                 }
-                else
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
                 {
-                    throw;
-                }
+                    Title = "Food Item Update Concurrency Error",
+                    Detail = $"Could not update the food item: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError
+                });
             }
 
             return NoContent();
@@ -77,8 +99,20 @@ namespace Apex.Catering.Controllers
         [HttpPost("/api/PostFoodItem")]
         public async Task<ActionResult<FoodItem>> PostFoodItem(FoodItem foodItem)
         {
-            _context.FoodItems.Add(foodItem);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.FoodItems.Add(foodItem);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Database Update Error",
+                    Detail = $"An error occurred while trying to add the food item to the database: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError,
+                });
+            }
 
             return CreatedAtAction("GetFoodItem", new { id = foodItem.FoodItemId }, foodItem);
         }
@@ -90,13 +124,30 @@ namespace Apex.Catering.Controllers
             var foodItem = await _context.FoodItems.FindAsync(id);
             if (foodItem == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Food Item Not Found",
+                    Detail = $"No food item found with the ID: {id}.",
+                    Status = StatusCodes.Status404NotFound,
+                });
             }
 
-            _context.FoodItems.Remove(foodItem);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.FoodItems.Remove(foodItem);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Database Update Error",
+                    Detail = $"An error occurred while trying to delete the food item from the database: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError,
+                });
+            }
 
-            return NoContent();
+            return Ok(new { FoodItemId = id }); 
         }
 
         private bool FoodItemExists(int id)

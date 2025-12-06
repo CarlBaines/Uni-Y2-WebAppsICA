@@ -24,7 +24,12 @@ namespace Apex.Catering.Controllers
         [HttpGet("/api/GetMenuFoodItem")]
         public async Task<ActionResult<IEnumerable<MenuFoodItem>>> GetMenuFoodItems()
         {
-            return await _context.MenuFoodItems.ToListAsync();
+            var menuFoodItems = await _context.MenuFoodItems.ToListAsync();
+            if(menuFoodItems.Count == 0)
+            {
+                return NoContent();
+            }
+            return menuFoodItems;
         }
 
         // GET: api/MenuFoodItems/5
@@ -35,7 +40,12 @@ namespace Apex.Catering.Controllers
 
             if (menuFoodItem == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Menu-FoodItem Link Not Found",
+                    Detail = $"No link found with the Menu ID: {id}.",
+                    Status = StatusCodes.Status404NotFound,
+                });
             }
 
             return menuFoodItem;
@@ -48,7 +58,12 @@ namespace Apex.Catering.Controllers
         {
             if (id != menuFoodItem.MenuId)
             {
-                return BadRequest();
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid Request",
+                    Detail = $"Route id {id} does not match the body MenuId {menuFoodItem.MenuId}",
+                    Status = StatusCodes.Status400BadRequest,
+                });
             }
 
             _context.Entry(menuFoodItem).State = EntityState.Modified;
@@ -57,16 +72,23 @@ namespace Apex.Catering.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
                 if (!MenuFoodItemExists(id))
                 {
-                    return NotFound();
+                    return NotFound(new ProblemDetails
+                    {
+                        Title = "Menu-FoodItem Link Not Found",
+                        Detail = $"No link found with the Menu ID: {id}.",
+                        Status = StatusCodes.Status404NotFound,
+                    });
                 }
-                else
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
                 {
-                    throw;
-                }
+                    Title = "Menu-FoodItem Update Concurrency Error",
+                    Detail = $"Could not update the Menu-FoodItem link: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError
+                });
             }
 
             return NoContent();
@@ -77,21 +99,28 @@ namespace Apex.Catering.Controllers
         [HttpPost("/api/PostMenuFoodItem")]
         public async Task<ActionResult<MenuFoodItem>> PostMenuFoodItem(MenuFoodItem menuFoodItem)
         {
-            _context.MenuFoodItems.Add(menuFoodItem);
             try
             {
+                _context.MenuFoodItems.Add(menuFoodItem);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
                 if (MenuFoodItemExists(menuFoodItem.MenuId))
                 {
-                    return Conflict();
+                    return Conflict(new ProblemDetails
+                    {
+                        Title = "Conflict",
+                        Detail = $"A link with the Menu ID: {menuFoodItem.MenuId} already exists.",
+                        Status = StatusCodes.Status409Conflict,
+                    });
                 }
-                else
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
                 {
-                    throw;
-                }
+                    Title = "Database Update Error",
+                    Detail = $"An error occurred while trying to add the Menu-FoodItem link: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError,
+                });
             }
 
             return CreatedAtAction("GetMenuFoodItem", new { id = menuFoodItem.MenuId }, menuFoodItem);
@@ -104,12 +133,30 @@ namespace Apex.Catering.Controllers
             var menuFoodItem = await _context.MenuFoodItems.FindAsync(MenuId, FoodItemId);
             if (menuFoodItem == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Menu-FoodItem Link Not Found",
+                    Detail = $"No link found between Menu ID: {MenuId} and FoodItem ID: {FoodItemId}.",
+                    Status = StatusCodes.Status404NotFound,
+                });
             }
-            _context.MenuFoodItems.Remove(menuFoodItem);
-            await _context.SaveChangesAsync();
 
-            return Ok($"Link between Menu {MenuId} and FoodItem {FoodItemId} has been removed!");
+            try
+            {
+                _context.MenuFoodItems.Remove(menuFoodItem);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Internal Server Error",
+                    Detail = $"An error occurred while trying to delete the Menu-FoodItem link: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError,
+                });
+            }
+
+            return Ok(new { MenuId, FoodItemId });
         }
 
         private bool MenuFoodItemExists(int id)

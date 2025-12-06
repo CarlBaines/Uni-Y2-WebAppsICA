@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Apex.Events.Data;
+using System.Data;
 
 namespace Apex.Events.Pages.Staffs
 {
@@ -34,10 +35,7 @@ namespace Apex.Events.Pages.Staffs
             {
                 return NotFound();
             }
-            else
-            {
-                Staff = staff;
-            }
+            Staff = staff;
             return Page();
         }
 
@@ -52,8 +50,16 @@ namespace Apex.Events.Pages.Staffs
             if (staff != null)
             {
                 Staff = staff;
-                _context.Staff.Remove(Staff);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Staff.Remove(Staff);
+                    await _context.SaveChangesAsync();
+                }
+                catch(DBConcurrencyException e)
+                {
+                    ModelState.AddModelError(string.Empty, $"Database Error occurred during staff record deletion: {e.Message}. Please try again!");
+                    return Page();
+                }
             }
 
             return RedirectToPage("./Index");

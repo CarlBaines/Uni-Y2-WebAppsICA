@@ -28,7 +28,7 @@ namespace Apex.Catering.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FoodBookingDTO>>> GetFoodBookings()
         {
-            //return await _context.FoodBookings.ToListAsync();
+            // Retrieve all food bookings and map them to DTOs.
             var foodBookings = await _context.FoodBookings
                 .Select(fb => new FoodBookingDTO
                 {
@@ -38,6 +38,13 @@ namespace Apex.Catering.Controllers
                     NumberOfGuests = fb.NumberOfGuests,
                     MenuId = fb.MenuId
                 }).ToListAsync();
+            // Check if there are no food bookings.
+            if (foodBookings.Count == 0)
+            {
+                // Return NoContent status code 204.
+                return NoContent();
+            }
+
             return foodBookings;
         }
 
@@ -47,11 +54,18 @@ namespace Apex.Catering.Controllers
         {
             var foodBooking = await _context.FoodBookings.FindAsync(id);
 
+            // Check if the food booking exists.
             if (foodBooking == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Food Booking Not Found",
+                    Detail = $"No food booking was found with the id: {id}",
+                    Status = StatusCodes.Status404NotFound
+                });
             }
 
+            // Map the food booking to a DTO and return it.
             return new FoodBookingDTO
             {
                 FoodBookingId = foodBooking.FoodBookingId,
@@ -69,22 +83,37 @@ namespace Apex.Catering.Controllers
         {
             if (id != foodBookingDto.FoodBookingId)
             {
-                return BadRequest();
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid Request",
+                    Detail = $"Route id {id} does not match the body FoodBookingId {foodBookingDto.FoodBookingId}",
+                    Status = StatusCodes.Status400BadRequest
+                });
             }
 
             // Check if the food booking exists
             var existing = await _context.FoodBookings.FindAsync(id);
             if (existing == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Food booking not found",
+                    Detail = $"No food booking exists with the id: {id}",
+                    Status = StatusCodes.Status404NotFound
+                });
             }
-            // Checks if the menu id exists in the menus database context.
+            
             if (existing.MenuId != foodBookingDto.MenuId)
             {
                 var menu = await _context.Menus.FindAsync(foodBookingDto.MenuId);
                 if(menu == null)
                 {
-                    return BadRequest();
+                    return BadRequest(new ProblemDetails
+                    {
+                        Title = "Invalid Menu",
+                        Detail = $"Menu does not exist with the id: {foodBookingDto.MenuId}",
+                        Status = StatusCodes.Status400BadRequest
+                    });
                 }
             }
 
@@ -92,20 +121,48 @@ namespace Apex.Catering.Controllers
             {
                 // Store Events named http client.
                 var client = _httpClientFactory.CreateClient("Events");
+                HttpResponseMessage? eventApiResponse = null;
                 // Check if the event id exists via Events API.
-                var eventApiResponse = await client.GetAsync($"api/Events/{foodBookingDto.EventId}");
+                try
+                {
+                    eventApiResponse = await client.GetAsync($"api/Events/{foodBookingDto.EventId}");
+                }
+                catch (HttpRequestException e)
+                {
+                    return StatusCode(StatusCodes.Status503ServiceUnavailable, new ProblemDetails
+                    {
+                        Title = "Events Service Unavailable",
+                        Detail = $"Failed to reach the Events service: {e.Message}",
+                        Status = StatusCodes.Status503ServiceUnavailable
+                    });
+                }
+
                 if (!eventApiResponse.IsSuccessStatusCode)
                 {
-                    return NotFound();
+                    return NotFound(new ProblemDetails
+                    {
+                        Title = "Event not found",
+                        Detail = $"Event with the id {foodBookingDto.EventId} does not exist.",
+                        Status = StatusCodes.Status404NotFound
+                    });
                 }
             }
 
+            // Update the existing food booking with the new values.
             existing.EventId = foodBookingDto.EventId;
             existing.ClientReferenceId = foodBookingDto.ClientReferenceId;
             existing.NumberOfGuests = foodBookingDto.NumberOfGuests;
             existing.MenuId = foodBookingDto.MenuId;
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
             // Return confirmation with the FoodBookingId.
             return Ok(new { existing.FoodBookingId });
         }
@@ -120,10 +177,30 @@ namespace Apex.Catering.Controllers
 
             // Validate events via Events service API.
             var client = _httpClientFactory.CreateClient("Events");
-            var eventApiResponse = await client.GetAsync($"api/Events/{foodBooking.EventId}");
+            HttpResponseMessage? eventApiResponse = null;
+
+            try
+            {
+                eventApiResponse = await client.GetAsync($"api/Events/{foodBooking.EventId}");
+            }
+            catch (HttpRequestException e)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new ProblemDetails
+                {
+                    Title = "Events Service Unavailable",
+                    Detail = $"Failed to reach Events service: {e.Message}",
+                    Status = StatusCodes.Status503ServiceUnavailable
+                });
+            }
+
             if (!eventApiResponse.IsSuccessStatusCode)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Event not found",
+                    Detail = $"Event with the id {foodBooking.EventId} does not exist.",
+                    Status = StatusCodes.Status404NotFound
+                });
             }
 
             // Check if the food booking menu id exists as well as checking if there is a valid number of guests input.
@@ -133,17 +210,32 @@ namespace Apex.Catering.Controllers
                 if (_context.FoodBookings.Any(fb => fb.ClientReferenceId == foodBooking.ClientReferenceId && fb.MenuId == foodBooking.MenuId)){
                     return Conflict(new { message = $"The client with {foodBooking.ClientReferenceId} has an existing booking for the menu {foodBooking.MenuId}" });
                 }
+
                 // Creates a new food booking object.
                 FoodBooking newBooking = new FoodBooking()
                 {
                     EventId = foodBooking.EventId,
-                    ClientReferenceId = (int)foodBooking.ClientReferenceId,
+                    ClientReferenceId = foodBooking.ClientReferenceId,
                     MenuId = foodBooking.MenuId,
                     NumberOfGuests = foodBooking.NumberOfGuests
                 };
+
                 // Adds the new booking to the database context and saves changes.
-                _context.FoodBookings.Add(newBooking);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.FoodBookings.Add(newBooking);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException e)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                    {
+                        Title = "Database Update Failed",
+                        Detail = $"Could not save the new food booking: {e.Message}",
+                        Status = StatusCodes.Status500InternalServerError
+                    });
+                }
+
                 // Returns the newly created food booking. Status code 201.
                 return CreatedAtAction(nameof(GetFoodBooking), new { id = newBooking.FoodBookingId },
                     // Return the food booking data transfer object.
@@ -159,7 +251,12 @@ namespace Apex.Catering.Controllers
             }
             else {
                 // else return bad request status code 400.
-                return BadRequest();
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Food Booking POST Request Failure",
+                    Detail = $"Failed to POST a new food booking: {foodBooking}",
+                    Status = StatusCodes.Status400BadRequest
+                });
             }
         }
 
@@ -170,11 +267,30 @@ namespace Apex.Catering.Controllers
             var foodBooking = await _context.FoodBookings.FindAsync(id);
             if (foodBooking == null)
             {
-                return NotFound();
+                // return NotFound($"A food booking with the id: {id} could not be found for deletion!");
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Food Booking Deletion Error!",
+                    Detail = $"A food booking with the id: {id} could not be found for deletion!",
+                    Status = StatusCodes.Status404NotFound
+                });
             }
 
-            _context.FoodBookings.Remove(foodBooking);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.FoodBookings.Remove(foodBooking);
+                await _context.SaveChangesAsync();
+            }
+            // Catches concurrency exceptions during deletion.
+            catch (DbUpdateConcurrencyException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Food Booking Deletion Error!",
+                    Detail = $"Could not delete the food booking: {e.Message}",
+                    Status = StatusCodes.Status500InternalServerError
+                });
+            }
 
             // Confirm deletion with the FoodBookingId.
             return Ok(new { FoodBookingId = id });

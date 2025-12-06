@@ -45,8 +45,16 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
 
-            _context.Events.Add(Event);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Events.Add(Event);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                ModelState.AddModelError(string.Empty, $"A database error occurred during event creation: {e.Message}. Please try again!");
+                return Page();
+            }
 
             return RedirectToPage("./Index");
         }

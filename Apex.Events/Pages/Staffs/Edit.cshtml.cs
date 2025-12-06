@@ -59,10 +59,8 @@ namespace Apex.Events.Pages.Staffs
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                ModelState.AddModelError(string.Empty, "Unable to save changes. The staff record was already modified.");
+                return Page();
             }
 
             return RedirectToPage("./Index");
