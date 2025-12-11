@@ -27,11 +27,17 @@ namespace Apex.Events.Pages.Guests
                 return NotFound();
             }
 
-            var guest = await _context.Guests.FirstOrDefaultAsync(m => m.GuestId == id);
+            // Lazy load related GuestBookings
+            var guest = await _context.Guests
+                .Include(g => g.GuestBookings!)
+                .ThenInclude(g => g.Event)
+                .FirstOrDefaultAsync(m => m.GuestId == id);
+
             if (guest == null)
             {
                 return NotFound();
             }
+
             Guest = guest;
             return Page();
         }

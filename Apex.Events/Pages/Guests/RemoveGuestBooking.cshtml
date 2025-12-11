@@ -1,0 +1,37 @@
+﻿@page
+@model Apex.Events.Pages.Guests.RemoveGuestBookingModel
+
+@{
+    ViewData["Title"] = "RemoveGuestBooking";
+}
+
+<h1>RemoveGuestBooking</h1>
+
+<div>
+    <hr />
+    <h3>Select a booking to delete:</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Event</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var booking in Model.GuestBookings)
+            {
+                <tr>
+                    <td>@booking.GuestBookingId</td>
+                    <td>@booking.Event?.EventName</td>
+                    <td>
+                        <form method="post" asp-route-id="@booking.GuestBookingId">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button> 
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-page="./Index">Back to List</a>
+</div>

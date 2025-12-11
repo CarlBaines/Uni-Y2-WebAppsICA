@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:int}"
 @model Apex.Events.Pages.Guests.DetailsModel
 
 @{
@@ -30,8 +30,57 @@
             @Html.DisplayFor(model => model.Guest.Email)
         </dd>
     </dl>
+
+    <h5>Booked Events</h5>
+    @if(Model.Guest?.GuestBookings is { Count: > 0 })
+    {
+        <ul>
+            @foreach(var bookedEvent in Model.Guest.GuestBookings)
+            {
+                var evt = bookedEvent.Event;
+                <li>
+                    @if(evt is not null)
+                    {
+                        @($"{evt.EventName}")
+                    }
+                    else
+                    {
+                        @:"Unknown Event"
+                    }
+                </li>
+            }
+        </ul>
+    } else
+    {
+        <p>No Guest Bookings</p>
+    }
+
+    <h5>Registered Attendance for Events</h5>
+    @if(Model.Guest?.GuestBookings is { Count: > 0 })
+    {
+        <ul>
+            @foreach(var eventAttending in Model.Guest.GuestBookings)
+            {
+                var evt = eventAttending.Event;
+                <li>
+                    @if(evt is not null)
+                    {
+                        @($"{evt.EventName}: {evt.EventDate}".Trim())
+                    }
+                    else
+                    {
+                        @:"Unknown Event"
+                    }
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No Registered Attendance for Events</p>
+    }
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Guest.GuestId">Edit</a> |
+    <a asp-page="./Edit" asp-route-id="@Model.Guest?.GuestId">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>

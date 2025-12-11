@@ -22,7 +22,9 @@ namespace Apex.Events.Pages.Guests
 
         public async Task OnGetAsync()
         {
-            Guest = await _context.Guests.ToListAsync();
+            Guest = await _context.Guests
+                .Include(g => g.GuestBookings)
+                .ToListAsync();
         }
     }
 }

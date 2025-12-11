@@ -38,7 +38,15 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.GuestId">Edit</a> |
+                <a asp-page="./RegisterAttendance" asp-route-id="@item.GuestId">Register Attendance</a> |
+                 @if(item.GuestBookings != null && item.GuestBookings.Any())
+                 {
+                        <a asp-page="./RemoveGuestBooking" asp-route-id="@item.GuestId">Remove Booking</a>
+                 } else
+                 {
+                        <span>No Booking</span>
+                 }
+              | <a asp-page="./Edit" asp-route-id="@item.GuestId">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.GuestId">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.GuestId">Delete</a>
             </td>

@@ -16,6 +16,10 @@ namespace Apex.Events.Data
         // Navigation property to the Event entity.
         public Event? Event { get; set; }
 
+        // Attendance attributes
+        public bool IsAttending { get; set; } = false;
+        public DateTime? CheckInTime { get; set; }
+
         // Constructor
         public GuestBooking()
         {

@@ -16,6 +16,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Event[0].EventName)
             </th>
+            <th>
+                @Html.DisplayNameFor(et => et.Event[0].EventType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(d => d.Event[0].EventDate)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -26,7 +32,13 @@
                 @Html.DisplayFor(modelItem => item.EventName)
             </td>
             <td>
-                <a asp-page="./BookGuest" asp-route-id="@item.EventId">Book Guest</a> |
+                @Html.DisplayFor(modelItem => item.EventType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventDate)
+            </td>
+            <td>
+                <a asp-page="./BookGuest" asp-route-eventId="@item.EventId">Book Guest</a> |
                 <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.EventId">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.EventId">Delete</a> 

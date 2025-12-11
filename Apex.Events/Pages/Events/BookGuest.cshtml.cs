@@ -28,7 +28,7 @@ namespace Apex.Events.Pages.Events
 
         public IActionResult OnGet(int eventId)
         {
-            if(eventId <= 0)
+            if (eventId <= 0)
             {
                 return NotFound(new ProblemDetails
                 {
