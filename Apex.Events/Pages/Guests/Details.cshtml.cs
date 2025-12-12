@@ -41,5 +41,44 @@ namespace Apex.Events.Pages.Guests
             Guest = guest;
             return Page();
         }
+
+        public async Task<IActionResult> OnPostAsync(int guestId)
+        {
+            // Load guest and guest bookings again
+            var guest = await _context.Guests
+                .Include(g => g.GuestBookings!)
+                .ThenInclude(gb => gb.Event)
+                .FirstOrDefaultAsync(g => g.GuestId == guestId);
+
+            if(guest == null)
+            {
+                return NotFound();
+            }
+
+            foreach(var booking in guest.GuestBookings)
+            {
+                // Name of form field for the IsAttending checkbox
+                var key = $"IsAttending_{booking.EventId}";
+
+                // Check if the checkbox was checked in the form submission
+                var isChecked = Request.Form.ContainsKey(key);
+
+                // Update the IsAttending property
+                booking.IsAttending = isChecked;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                // Redirect back to the Details page for the same guest
+                return RedirectToPage("./Details", new { id = guestId });
+
+            }
+            catch (DbUpdateException e)
+            {
+                ModelState.AddModelError(string.Empty, $"A database error occurred while updating attendance: {e.Message}. Please try again!");
+                return Page();
+            }
+        }
     }
 }

@@ -34,46 +34,62 @@
     <h5>Booked Events</h5>
     @if(Model.Guest?.GuestBookings is { Count: > 0 })
     {
-        <ul>
-            @foreach(var bookedEvent in Model.Guest.GuestBookings)
-            {
-                var evt = bookedEvent.Event;
-                <li>
-                    @if(evt is not null)
-                    {
-                        @($"{evt.EventName}")
-                    }
-                    else
-                    {
-                        @:"Unknown Event"
-                    }
-                </li>
-            }
-        </ul>
+        <form method="post">
+            <input type ="hidden" name="guestId" value="@Model.Guest.GuestId" />
+            <ul>
+                @foreach (var bookedEvent in Model.Guest.GuestBookings)
+                {
+                    var evt = bookedEvent.Event;
+                    <li>
+                        @if (evt is not null)
+                        {
+                            @($"{evt.EventName}: {evt.EventDate}".Trim())
+                            <span>@Html.CheckBox("IsAttending_" + bookedEvent.EventId, bookedEvent.IsAttending)</span>
+                        }
+                        else
+                        {
+                            @:"Unknown Event"
+                        }
+                    </li>
+                }
+            </ul>
+            <button type = "submit" class="btn btn-primary">Register Attendance</button>
+            <br />
+        </form>
     } else
     {
         <p>No Guest Bookings</p>
     }
 
+    <br />
     <h5>Registered Attendance for Events</h5>
     @if(Model.Guest?.GuestBookings is { Count: > 0 })
     {
-        <ul>
-            @foreach(var eventAttending in Model.Guest.GuestBookings)
-            {
-                var evt = eventAttending.Event;
-                <li>
-                    @if(evt is not null)
-                    {
-                        @($"{evt.EventName}: {evt.EventDate}".Trim())
-                    }
-                    else
-                    {
-                        @:"Unknown Event"
-                    }
-                </li>
-            }
-        </ul>
+		// Filter to only events with registered attendance.
+        var attended = Model.Guest.GuestBookings.Where(gb => gb.IsAttending);
+        @if (attended.Any())
+        {
+            <ul>
+                @foreach (var eventAttending in attended)
+                {
+                    var evt = eventAttending.Event;
+                    <li>
+                        @if (evt is not null)
+                        {
+                            @($"{evt.EventName}: {evt.EventDate}".Trim())
+                        }
+                        else
+                        {
+                            @:"Unknown Event"
+                        }
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No Registered Attendance for Events</p>
+        }
     }
     else
     {

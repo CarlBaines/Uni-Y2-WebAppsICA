@@ -12,7 +12,13 @@ builder.Services.AddDbContext<EventsDbContext>();
 // Register the database initialiser
 builder.Services.AddScoped<DbTestDataInitialiser>();
 
+// Register application services
 builder.Services.AddHttpClient<EventTypesService>(httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://localhost:7088/");
+});
+
+builder.Services.AddHttpClient<VenuesService>(httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://localhost:7088/");
 });

@@ -15,20 +15,23 @@ namespace Apex.Events.Pages.Events
     {
         private readonly Apex.Events.Data.EventsDbContext _context;
         private readonly EventTypesService _eventTypesService;
+        private readonly VenuesService _venuesService;
 
         public List<SelectListItem> EventTypeItems { get; set; } = [];
+        public List<SelectListItem> VenueItems { get; set; } = [];
 
-        public CreateModel(Apex.Events.Data.EventsDbContext context, EventTypesService eventTypesService)
+        public CreateModel(Apex.Events.Data.EventsDbContext context, EventTypesService eventTypesService, VenuesService venuesService)
         {
             _context = context;
             _eventTypesService = eventTypesService;
+            _venuesService = venuesService;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // Populate EventTypes dropdown
+            // Populate EventTypes and venues dropdowns
             EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
-
+            VenueItems = await _venuesService.GetVenuesSelectListAsync();
             return Page();
         }
 
@@ -40,8 +43,9 @@ namespace Apex.Events.Pages.Events
         {
             if (!ModelState.IsValid)
             {
-                // Populate EventTypes dropdown
+                // Populate EventTypes and venues dropdowns
                 EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
+                VenueItems = await _venuesService.GetVenuesSelectListAsync();
                 return Page();
             }
 

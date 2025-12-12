@@ -15,19 +15,24 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <span class="text-danger">*</span>
-                <label asp-for="Event.EventName" class="control-label"></label>
+                <label asp-for="Event.EventName" class="control-label">Name of Event</label>
                 <input asp-for="Event.EventName" class="form-control" />
                 <span asp-validation-for="Event.EventName" class="text-danger"></span>
                 <br />
-                <label asp-for="Event.EventDate" class="control-label"></label>
+                <label asp-for="Event.EventDate" class="control-label">Date of Event</label>
                 <input asp-for="Event.EventDate" class="form-label" />
                 <span asp-validation-for="Event.EventDate" class="text-danger"></span>
                 <br />
-                <label asp-for="Event.EventType" class="control-label"></label>
+                <label asp-for="Event.EventType" class="control-label">Event Type</label>
                 <select asp-for="Event.EventType" class="form-control" asp-items="Model.EventTypeItems">
                     <option value="">-- Select event type --</option>
                 </select>
                 <span asp-validation-for="Event.EventType" class="text-danger"></span>
+                <br />
+                <label asp-for="Event.VenueCode" class="control-label">Venue</label>
+                <select asp-for="Event.VenueCode" class="form-control" asp-items="Model.VenueItems">
+					<option value="">-- Select venue --</option>
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

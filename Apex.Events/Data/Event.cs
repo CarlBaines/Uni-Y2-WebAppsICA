@@ -16,6 +16,9 @@ namespace Apex.Events.Data
         [Required]
         [MaxLength(50)]
         public string EventType { get; set; } = string.Empty;
+        // Foreign key to the Venue entity.
+        [Required]
+        public string VenueCode { get; set; } = string.Empty;
         // Navigation property to the Staffing entity.
         public List<Staffing>? Staffings { get; set; }
         // Navigation property to the GuestBooking entity.

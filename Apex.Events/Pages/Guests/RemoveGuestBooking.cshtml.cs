@@ -43,7 +43,7 @@ namespace Apex.Events.Pages.Guests
             }
             Guest = guest;
             // Populate the GuestBookings property
-            GuestBookings = guest.GuestBookings.ToList();
+            GuestBookings = guest.GuestBookings!.ToList();
             return Page();
         }
 

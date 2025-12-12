@@ -14,9 +14,11 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Event.EventName)
             <br />
-            @Html.DisplayNameFor(et => et.Event.EventType)
+            @Html.DisplayNameFor(e => e.Event.EventType)
             <br />
             @Html.DisplayNameFor(d => d.Event.EventDate)
+            <br />
+            @Html.DisplayNameFor(v => v.Event.VenueCode)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Event.EventName)
@@ -24,6 +26,8 @@
             @Html.DisplayFor(et => et.Event.EventType)
             <br />
             @Html.DisplayFor(d => d.Event.EventDate)
+            <br />
+            @Html.DisplayFor(v => v.Event.VenueCode)
         </dd>
     </dl>
 
