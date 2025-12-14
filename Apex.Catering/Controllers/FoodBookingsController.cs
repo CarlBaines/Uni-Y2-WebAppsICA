@@ -48,6 +48,28 @@ namespace Apex.Catering.Controllers
             return foodBookings;
         }
 
+        [HttpGet("ForEvent/{eventId:int}")]
+        public async Task<ActionResult<IEnumerable<FoodBookingDTO>>> GetFoodBookingForEvent(int eventId)
+        {
+            var foodBookings = await _context.FoodBookings
+                .Where(fb => fb.EventId == eventId)
+                .Select(fb => new FoodBookingDTO
+                {
+                    FoodBookingId = fb.FoodBookingId,
+                    EventId = fb.EventId,
+                    ClientReferenceId = fb.ClientReferenceId,
+                    NumberOfGuests = fb.NumberOfGuests,
+                    MenuId = fb.MenuId
+                }).ToListAsync();
+            
+            if (foodBookings.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return foodBookings;
+        }
+
         // GET: api/FoodBookings/5
         [HttpGet("{id:int}")]
         public async Task<ActionResult<FoodBookingDTO>> GetFoodBooking(int id)

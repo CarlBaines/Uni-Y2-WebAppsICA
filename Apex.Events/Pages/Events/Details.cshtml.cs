@@ -6,19 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Apex.Events.Data;
+using Apex.Events.Services;
+using Apex.Events.DTOs;
 
 namespace Apex.Events.Pages.Events
 {
     public class DetailsModel : PageModel
     {
         private readonly Apex.Events.Data.EventsDbContext _context;
+        private readonly FoodBookingsService _foodBookingsService;
 
-        public DetailsModel(Apex.Events.Data.EventsDbContext context)
+        public DetailsModel(Apex.Events.Data.EventsDbContext context, FoodBookingsService foodBookingsService)
         {
             _context = context;
+            _foodBookingsService = foodBookingsService;
         }
 
         public Event Event { get; set; } = default!;
+        public IReadOnlyList<FoodBookingDTO> FoodBookings { get; set; } = [];
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -43,6 +48,9 @@ namespace Apex.Events.Pages.Events
                 });
             }
             Event = evt;
+
+            // Retrieve FoodBookings using the service
+            FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
             return Page();
         }
     }

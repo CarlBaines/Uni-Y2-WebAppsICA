@@ -57,6 +57,26 @@
     {
         <p>No guests have booked for this event yet.</p>
     }
+
+    <h4>Food Bookings</h4>
+    @if (Model.FoodBookings is { Count: > 0 })
+    {
+        <ul>
+            @foreach(var fb in Model.FoodBookings)
+            {
+                <li>
+					Booking: @fb.FoodBookingId -
+                    Client: @fb.ClientReferenceId,
+                    Menu: @fb.MenuId,
+                    Guests: @fb.NumberOfGuests
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No food bookings have been made for this event.</p>
+    }
 </div>
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
