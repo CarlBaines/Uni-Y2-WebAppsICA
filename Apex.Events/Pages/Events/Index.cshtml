@@ -38,7 +38,8 @@
                 @Html.DisplayFor(modelItem => item.EventDate)
             </td>
             <td>
-                <a asp-page="./BookGuest" asp-route-eventId="@item.EventId">Book Guest</a> |
+                <a asp-page="./BookGuest" asp-route-id="@item.EventId">Book Guest</a> |
+                <a asp-page="./AddFoodBooking" asp-route-id="@item.EventId">Book Food</a> |
                 <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.EventId">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.EventId">Delete</a> 

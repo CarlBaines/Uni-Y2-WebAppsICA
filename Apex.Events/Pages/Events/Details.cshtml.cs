@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Apex.Events.Data;
 using Apex.Events.Services;
 using Apex.Events.DTOs;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Apex.Events.Pages.Events
 {
@@ -15,15 +16,29 @@ namespace Apex.Events.Pages.Events
     {
         private readonly Apex.Events.Data.EventsDbContext _context;
         private readonly FoodBookingsService _foodBookingsService;
+        private readonly VenuesService _venuesService;
 
-        public DetailsModel(Apex.Events.Data.EventsDbContext context, FoodBookingsService foodBookingsService)
+        public DetailsModel(Apex.Events.Data.EventsDbContext context, FoodBookingsService foodBookingsService, VenuesService venuesService)
         {
             _context = context;
             _foodBookingsService = foodBookingsService;
+            _venuesService = venuesService;
         }
 
+        // Display properties to hold Event details and associated FoodBookings
         public Event Event { get; set; } = default!;
         public IReadOnlyList<FoodBookingDTO> FoodBookings { get; set; } = [];
+        // Display Property to hold Venue name
+        public string? VenueName { get; set; }
+        // Display property to hold list of venues
+        public List<SelectListItem> Venues { get; set; } = [];
+
+        // Bind property for the user-selected venue code from the dropdown
+        [BindProperty]
+        public string? SelectedVenueCode { get; set; }
+
+        [BindProperty]
+        public int EventId { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -48,10 +63,81 @@ namespace Apex.Events.Pages.Events
                 });
             }
             Event = evt;
+            EventId = evt.EventId;
 
             // Retrieve FoodBookings using the service
             FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
+
+            // Retrieve Venue name using the service
+            VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
+
+            // Prepare list of venues for dropdown
+            Venues = await _venuesService.GetVenuesSelectListAsync();
+
+            // By default, select the current venue in the dropdown.
+            SelectedVenueCode = Event.VenueCode;
+
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            // Validate selection from dropdown.
+            if (string.IsNullOrWhiteSpace(SelectedVenueCode))
+            {
+                ModelState.AddModelError(string.Empty, "Please select a venue to reserve.");
+            }
+
+            // Retrieve the event from the hidden eventId field.
+            var evt = await _context.Events
+                .Include(e => e.GuestBookings!)
+                .ThenInclude(gb => gb.Guest)
+                .FirstOrDefaultAsync(e => e.EventId == EventId);
+
+            if(evt == null)
+            {
+                return NotFound(new ProblemDetails
+                {
+                    Title = "Event Not Found",
+                    Detail = $"No event found with ID {Event.EventId}.",
+                    Status = 404
+                });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Rebuild display data
+                Event = evt;
+                FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
+                VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
+                Venues = await _venuesService.GetVenuesSelectListAsync();
+                return Page();
+            }
+
+            // Store the old and new venue codes for comparison.
+            var oldVenueCode = evt.VenueCode;
+            var newVenueCode = SelectedVenueCode!;
+
+            try
+            {
+                // Update the event's venue to the selected venue from the dropdown.
+                evt.VenueCode = newVenueCode;
+
+                await _context.SaveChangesAsync();
+
+                // Redirect to the same page to reflect changes.
+                return RedirectToPage("./Details", new { id = evt.EventId });
+            }
+            catch(Exception e)
+            {
+                ModelState.AddModelError(string.Empty, $"An error occurred whilst reserving a venue: {e.Message}");
+                // Rebuild display data
+                Event = evt;
+                FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
+                VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
+                Venues = await _venuesService.GetVenuesSelectListAsync();
+                return Page();
+            }
         }
     }
 }

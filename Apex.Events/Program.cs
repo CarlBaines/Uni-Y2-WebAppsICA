@@ -28,6 +28,11 @@ builder.Services.AddHttpClient<FoodBookingsService>(httpClient =>
     httpClient.BaseAddress = new Uri("https://localhost:7012/");
 });
 
+builder.Services.AddHttpClient<MenuService>(httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://localhost:7012/");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

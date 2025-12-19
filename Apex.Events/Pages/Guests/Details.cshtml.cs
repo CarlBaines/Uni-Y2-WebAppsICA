@@ -55,13 +55,17 @@ namespace Apex.Events.Pages.Guests
                 return NotFound();
             }
 
-            foreach(var booking in guest.GuestBookings)
+            foreach(var booking in guest.GuestBookings!)
             {
                 // Name of form field for the IsAttending checkbox
                 var key = $"IsAttending_{booking.EventId}";
 
-                // Check if the checkbox was checked in the form submission
-                var isChecked = Request.Form.ContainsKey(key);
+                // Values will be ["true", "false"] when checked, or ["false"] when unchecked
+                var values = Request.Form[key];
+
+                // Determine if the checkbox is checked
+                // checkbox is checked if any value is "true"
+                var isChecked = values.Any(v => string.Equals(v, "true", StringComparison.OrdinalIgnoreCase));
 
                 // Update the IsAttending property
                 booking.IsAttending = isChecked;

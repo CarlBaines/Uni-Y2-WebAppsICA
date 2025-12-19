@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Apex.Events.Data;
 using Apex.Events.Services;
 using Microsoft.EntityFrameworkCore;
+using Apex.Events.DTOs;
 
 namespace Apex.Events.Pages.Events
 {
@@ -20,18 +21,16 @@ namespace Apex.Events.Pages.Events
         public List<SelectListItem> EventTypeItems { get; set; } = [];
         public List<SelectListItem> VenueItems { get; set; } = [];
 
-        public CreateModel(Apex.Events.Data.EventsDbContext context, EventTypesService eventTypesService, VenuesService venuesService)
+        public CreateModel(Apex.Events.Data.EventsDbContext context, EventTypesService eventTypesService, VenuesService venuesService, MenuService menuService)
         {
             _context = context;
             _eventTypesService = eventTypesService;
             _venuesService = venuesService;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int eventId)
         {
-            // Populate EventTypes and venues dropdowns
-            EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
-            VenueItems = await _venuesService.GetVenuesSelectListAsync();
+            await PopulateDropdownsAsync();
             return Page();
         }
 
@@ -43,9 +42,7 @@ namespace Apex.Events.Pages.Events
         {
             if (!ModelState.IsValid)
             {
-                // Populate EventTypes and venues dropdowns
-                EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
-                VenueItems = await _venuesService.GetVenuesSelectListAsync();
+                await PopulateDropdownsAsync();
                 return Page();
             }
 
@@ -54,13 +51,20 @@ namespace Apex.Events.Pages.Events
                 _context.Events.Add(Event);
                 await _context.SaveChangesAsync();
             }
-            catch(DbUpdateException e)
+            catch (DbUpdateException e)
             {
                 ModelState.AddModelError(string.Empty, $"A database error occurred during event creation: {e.Message}. Please try again!");
+                await PopulateDropdownsAsync();
                 return Page();
             }
 
             return RedirectToPage("./Index");
+        }
+
+        private async Task PopulateDropdownsAsync()
+        {
+            EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
+            VenueItems = await _venuesService.GetVenuesSelectListAsync();
         }
     }
 }

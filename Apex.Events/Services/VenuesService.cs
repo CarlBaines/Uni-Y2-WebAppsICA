@@ -62,5 +62,23 @@ namespace Apex.Events.Services
             }
             return selectList;
         }
+
+        // Async method to fetch a venue by its code.
+        public async Task<VenueDto?> GetVenueByCodeAsync(string venueCode)
+        {
+            if (string.IsNullOrWhiteSpace(venueCode))
+            {
+                return null;
+            }
+            var venues = await GetVenuesAsync();
+            return venues.FirstOrDefault(v => string.Equals(v.Code, venueCode));
+        }
+
+        // Async method to fetch a venue name by its code.
+        public async Task<string?> GetVenueNameAsync(string venueCode)
+        {
+            var venue = await GetVenueByCodeAsync(venueCode);
+            return venue?.Name;
+        }
     }
 }

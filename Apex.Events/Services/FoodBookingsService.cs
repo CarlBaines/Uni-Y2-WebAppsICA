@@ -1,4 +1,5 @@
 ﻿using Apex.Events.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace Apex.Events.Services
@@ -45,6 +46,13 @@ namespace Apex.Events.Services
                 throw new ArgumentNullException(nameof(foodBookings), "The food bookings API response is null");
             }
             return foodBookings;
+        }
+
+        // Async method to create a new food booking.
+        public async Task CreateFoodBookingAsync(FoodBookingDTO foodBooking)
+        {
+            var response = await _httpClient.PostAsJsonAsync(FoodBookingsEndpoint, foodBooking);
+            response.EnsureSuccessStatusCode();
         }
     }
 }
