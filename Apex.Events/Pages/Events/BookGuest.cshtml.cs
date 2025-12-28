@@ -26,9 +26,9 @@ namespace Apex.Events.Pages.Events
         [BindProperty]
         public int EventId { get; set; } = default!;
 
-        public IActionResult OnGet(int eventId)
+        public IActionResult OnGet(int id)
         {
-            if (eventId <= 0)
+            if (id <= 0)
             {
                 return NotFound(new ProblemDetails
                 {
@@ -38,7 +38,7 @@ namespace Apex.Events.Pages.Events
                 });
             }
 
-            var eventExists = _context.Events.Any(e => e.EventId == eventId);
+            var eventExists = _context.Events.Any(e => e.EventId == id);
             if (!eventExists)
             {
                 return NotFound(new ProblemDetails
@@ -49,7 +49,7 @@ namespace Apex.Events.Pages.Events
                 });
             }
             // Set the EventId for use in the form.
-            EventId = eventId;
+            EventId = id;
             return Page();
         }
 

@@ -71,11 +71,7 @@ namespace Apex.Events.Pages.Events
             // Retrieve Venue name using the service
             VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
 
-            // Prepare list of venues for dropdown
-            Venues = await _venuesService.GetVenuesSelectListAsync();
-
-            // By default, select the current venue in the dropdown.
-            SelectedVenueCode = Event.VenueCode;
+            await RebuildVenueDropdownAsync(evt);
 
             return Page();
         }
@@ -86,7 +82,7 @@ namespace Apex.Events.Pages.Events
             if (string.IsNullOrWhiteSpace(SelectedVenueCode))
             {
                 ModelState.AddModelError(string.Empty, "Please select a venue to reserve.");
-            }
+            }   
 
             // Retrieve the event from the hidden eventId field.
             var evt = await _context.Events
@@ -99,7 +95,7 @@ namespace Apex.Events.Pages.Events
                 return NotFound(new ProblemDetails
                 {
                     Title = "Event Not Found",
-                    Detail = $"No event found with ID {Event.EventId}.",
+                    Detail = $"No event found with ID {EventId}.",
                     Status = 404
                 });
             }
@@ -107,10 +103,11 @@ namespace Apex.Events.Pages.Events
             if (!ModelState.IsValid)
             {
                 // Rebuild display data
+                await RebuildVenueDropdownAsync(evt);
                 Event = evt;
                 FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
                 VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
-                Venues = await _venuesService.GetVenuesSelectListAsync();
+                // Venues = await _venuesService.GetVenuesSelectListAsync();
                 return Page();
             }
 
@@ -120,6 +117,13 @@ namespace Apex.Events.Pages.Events
 
             try
             {
+                await _venuesService.ChangeVenueReservationAsync(
+                    evt.EventType,
+                    evt.EventDate.ToDateTime(TimeOnly.MinValue),
+                    oldVenueCode,
+                    newVenueCode
+                );
+
                 // Update the event's venue to the selected venue from the dropdown.
                 evt.VenueCode = newVenueCode;
 
@@ -132,12 +136,44 @@ namespace Apex.Events.Pages.Events
             {
                 ModelState.AddModelError(string.Empty, $"An error occurred whilst reserving a venue: {e.Message}");
                 // Rebuild display data
+                await RebuildVenueDropdownAsync(evt);
                 Event = evt;
                 FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
                 VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
-                Venues = await _venuesService.GetVenuesSelectListAsync();
                 return Page();
             }
+        }
+
+        private async Task RebuildVenueDropdownAsync(Event evt)
+        {
+            var availableVenues = await _venuesService.GetAvailableSuitableVenuesAsync(
+                evt.EventType, evt.EventDate.ToDateTime(TimeOnly.MinValue)
+            );
+
+            Venues = availableVenues
+                .Select(av => new SelectListItem
+                {
+                    Value = av.Code,
+                    Text = av.Name,
+                }).ToList();
+
+            // Check if the event has an associated venue and if the current venue is not in the available venues list
+            if (!string.IsNullOrWhiteSpace(evt.VenueCode) && Venues.All(v => v.Value != evt.VenueCode))
+            {
+                var currentVenueText = evt.VenueCode;
+                if (!string.IsNullOrWhiteSpace(VenueName))
+                {
+                    currentVenueText = VenueName + " (Currently Reserved)";
+                }
+                Venues.Insert(0, new SelectListItem
+                {
+                    Value = evt.VenueCode,
+                    Text = currentVenueText
+                });
+            }
+
+            // By default, select the current venue in the dropdown.
+            SelectedVenueCode = evt.VenueCode;
         }
     }
 }

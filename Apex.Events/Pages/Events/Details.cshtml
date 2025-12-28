@@ -88,9 +88,11 @@
     else
     {
         <p>No food bookings have been made for this event.</p>
+        <a class="btn btn-primary" asp-page="./AddFoodBooking" asp-route-id="@Model.Event.EventId">Add Food Booking</a>
     }
 
     <div class="col-md-4">
+        <br />
         <form method="post">
             <input type="hidden" asp-for="EventId" />
             <h5><label asp-for="SelectedVenueCode">Change Venue</label></h5>

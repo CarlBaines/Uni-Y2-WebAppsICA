@@ -289,7 +289,6 @@ namespace Apex.Catering.Controllers
             var foodBooking = await _context.FoodBookings.FindAsync(id);
             if (foodBooking == null)
             {
-                // return NotFound($"A food booking with the id: {id} could not be found for deletion!");
                 return NotFound(new ProblemDetails
                 {
                     Title = "Food Booking Deletion Error!",

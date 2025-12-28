@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:int}"
 @model Apex.Events.Pages.Events.AddFoodBookingModel
 
 @{
@@ -6,31 +6,34 @@
 }
 
 <h1>AddFoodBooking</h1>
-
-<h4>Event</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
+            <input type="hidden" asp-for="EventId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* MenuId form section *@
             <div class="form-group">
-                <span class="text-danger">*</span>
-                
+				<label asp-for="SelectedMenuId" class="control-label">Menu</label>
+                <select asp-for="SelectedMenuId" class="form-control" asp-items="Model.Menus">
+				    <option value="">-- Select a Menu --</option>
+                </select>
+                <span asp-validation-for="SelectedMenuId" class="text-danger"></span>
+            </div>
+            @* ClientReferenceId form section *@
+            <div class="form-group">
+                <label asp-for="ClientReferenceId" class="control-label">ClientReferenceId</label>
+				<input asp-for="ClientReferenceId" class="form-control" />
+				<span asp-validation-for="ClientReferenceId" class="text-danger"></span>
+            </div>
+            @* NumberofGuests form section *@
+            <div class="form-group">
+                <label asp-for="NumberOfGuests" class="control-label">Number of Guests</label>
+				<input asp-for="NumberOfGuests" class="form-control" />
+				<span asp-validation-for="NumberOfGuests" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <span class="text-danger">*</span>
-                
-            </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                
-            </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create Food Booking" class="btn btn-primary" />
             </div>
         </form>
     </div>
