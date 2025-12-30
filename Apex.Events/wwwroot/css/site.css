@@ -18,5 +18,38 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: #151b23;
+    margin-bottom: 60px;
+    font-family: "Poppins", "TikTok Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: white;
+}
+
+footer{
+    color: inherit;
+}
+
+footer.border-top {
+    border-top-width: 2px !important;
+    border-top-style: solid;
+}
+
+nav.border-bottom{
+    border-color: white;
+    border-bottom-width: 2px !important;
+    border-bottom-style: solid;
+}
+
+th, td{
+    color: white;
+}
+
+.center-container {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 1140px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
 }

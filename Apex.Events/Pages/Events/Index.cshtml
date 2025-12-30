@@ -5,49 +5,53 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="center-container">
+    <h1>Event List</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Event[0].EventName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(et => et.Event[0].EventType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(d => d.Event[0].EventDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Event) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventDate)
-            </td>
-            <td>
-                <a asp-page="./BookGuest" asp-route-id="@item.EventId">Book Guest</a> |
-                    @if(!Model.EventFoodBookingCheck.TryGetValue(item.EventId, out var hasFoodBooking) || !hasFoodBooking)
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].EventName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(et => et.Event[0].EventType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(d => d.Event[0].EventDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Event)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EventName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EventType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EventDate)
+                </td>
+                <td>
+                    <a asp-page="./BookGuest" asp-route-id="@item.EventId">Book Guest</a> |
+                    @if (!Model.EventFoodBookingCheck.TryGetValue(item.EventId, out var hasFoodBooking) || !hasFoodBooking)
                     {
                         <text><a asp-page="./AddFoodBooking" asp-route-id="@item.EventId">Book Food</a> | </text>
                     }
-                <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.EventId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.EventId">Delete</a> 
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.EventId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.EventId">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

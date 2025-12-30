@@ -5,51 +5,56 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="center-container">
+    <h1>Guest List</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Guest[0].FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Guest[0].LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Guest[0].Email)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Guest) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                 @if(item.GuestBookings != null && item.GuestBookings.Any())
-                 {
-                        <a asp-page="./RemoveGuestBooking" asp-route-id="@item.GuestId">Remove Booking</a>
-                 } else
-                 {
-                        <span>No Booking</span>
-                 }
-              | <a asp-page="./Edit" asp-route-id="@item.GuestId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.GuestId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.GuestId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Guest[0].FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Guest[0].LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Guest[0].Email)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Guest)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @if (item.GuestBookings != null && item.GuestBookings.Any())
+                        {
+                            <a asp-page="./RemoveGuestBooking" asp-route-id="@item.GuestId">Remove Booking</a>
+                        }
+                        else
+                        {
+                            <span>No Booking</span>
+                        }
+                        | <a asp-page="./Edit" asp-route-id="@item.GuestId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.GuestId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.GuestId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
