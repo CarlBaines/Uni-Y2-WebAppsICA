@@ -46,25 +46,25 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
 
-            string? reservationReference = null;
+            //string? reservationReference = null;
 
             try
             {
-                // Reserve the venue
-                var reservation = await _venuesService.ReserveVenueAsync(
-                    Event.EventDate.ToDateTime(TimeOnly.MinValue),
-                    Event.VenueCode);
-                reservationReference = reservation.Reference;
+                //// Reserve the venue
+                //var reservation = await _venuesService.ReserveVenueAsync(
+                //    Event.EventDate.ToDateTime(TimeOnly.MinValue),
+                //    Event.VenueCode);
+                //reservationReference = reservation.Reference;
                 _context.Events.Add(Event);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException e)
             {
                 // If a DB error is caught, free the reservation
-                if (!string.IsNullOrWhiteSpace(reservationReference))
-                {
-                    await _venuesService.FreeReservationAsync(reservationReference);
-                }
+                //if (!string.IsNullOrWhiteSpace(reservationReference))
+                //{
+                //    await _venuesService.FreeReservationAsync(reservationReference);
+                //}
 
                 ModelState.AddModelError(string.Empty, $"A database error occurred during event creation: {e.Message}. Please try again!");
                 await PopulateDropdownsAsync(Event);
@@ -72,10 +72,10 @@ namespace Apex.Events.Pages.Events
             }
             catch(Exception e)
             {
-                if (!string.IsNullOrWhiteSpace(reservationReference))
-                {
-                    await _venuesService.FreeReservationAsync(reservationReference);
-                }
+                //if (!string.IsNullOrWhiteSpace(reservationReference))
+                //{
+                //    await _venuesService.FreeReservationAsync(reservationReference);
+                //}
 
                 ModelState.AddModelError(string.Empty, $"A database error occurred during event creation: {e.Message}. Please try again!");
                 await PopulateDropdownsAsync(Event);
@@ -88,33 +88,7 @@ namespace Apex.Events.Pages.Events
         private async Task PopulateDropdownsAsync(Event? evt)
         {
             EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
-            VenueItems = await GetVenueItemsAsync(evt);
-        }
-
-        private async Task<List<SelectListItem>> GetVenueItemsAsync(Event? evt)
-        {
-            if(evt == null)
-            {
-                return [];
-            }
-
-            if(string.IsNullOrWhiteSpace(evt.EventType) || evt.EventDate == default)
-            {
-                return [];
-            }
-
-            var available = await _venuesService.GetAvailableSuitableVenuesAsync(
-                evt.EventType,
-                evt.EventDate.ToDateTime(TimeOnly.MinValue)
-            );
-
-            var venueItems = available.Select(a => new SelectListItem
-            {
-                Value = a.Code,
-                Text = a.Name
-            }).ToList();
-
-            return venueItems;
+            VenueItems = await _venuesService.GetVenuesSelectListAsync();
         }
     }
 }
