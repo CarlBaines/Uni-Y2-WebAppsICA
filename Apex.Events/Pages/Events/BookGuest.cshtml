@@ -5,26 +5,24 @@
     ViewData["Title"] = "BookGuest";
 }
 
-<h1>BookGuest</h1>
-
-<h4>Event</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="center-container">
+        <h1>BookGuest - Event</h1>
+        <hr />
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
 				<input type="hidden" asp-for="EventId" />
                 <br />
-                <label asp-for="Guest.FirstName" class = "control-label"></label>
+                <label asp-for="Guest.FirstName" class = "control-label">First Name of Guest</label>
                 <input asp-for="Guest.FirstName" class = "form-control" />
                 <span asp-validation-for="Guest.FirstName" class = "text-danger"></span>
                 <br />
-                <label asp-for="Guest.LastName" class="control-label"></label>
+                <label asp-for="Guest.LastName" class="control-label">Last Name of Guest</label>
                 <input asp-for="Guest.LastName" class="form-control" />
                 <span asp-validation-for="Guest.LastName" class="text-danger"></span>
 				<br />
-                <label asp-for="Guest.Email" class="control-label"></label>
+                <label asp-for="Guest.Email" class="control-label">Email of Guest</label>
                 <input asp-for="Guest.Email" class="form-control" />
                 <span asp-validation-for="Guest.Email" class="text-danger"></span>
             </div>
@@ -33,12 +31,12 @@
                 <input type="submit" value="Book Guest" class="btn btn-primary" />
             </div>
         </form>
+        <div>
+            <a asp-page="Index">Back to List</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -21,7 +21,8 @@ namespace Apex.Events.Pages.Events
             _foodBookingsService = foodBookingsService;
         }
 
-        public IList<Event> Event { get;set; } = default!;
+        public IList<Event> Event { get; set; } = default!;
+
         // Dictionary for checking if an event has a food booking
         public Dictionary<int, bool> EventFoodBookingCheck { get; set; } = new();
 

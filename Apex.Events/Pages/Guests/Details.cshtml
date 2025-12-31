@@ -5,10 +5,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Guest</h4>
+<div class="center-container">
+    <h1><b>Details - Guest</b></h1>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -31,7 +30,7 @@
         </dd>
     </dl>
 
-    <h5>Booked Events</h5>
+    <h5><b>Booked Events</b></h5>
     @if(Model.Guest?.GuestBookings is { Count: > 0 })
     {
         <form method="post">
@@ -62,10 +61,10 @@
     }
 
     <br />
-    <h5>Registered Attendance for Events</h5>
+    <h5><b>Registered Attendance for Events</b></h5>
     @if(Model.Guest?.GuestBookings is { Count: > 0 })
     {
-		// Filter to only events with registered attendance.
+        @*Filter to only events with registered attendance.*@
         var attended = Model.Guest.GuestBookings.Where(gb => gb.IsAttending);
         @if (attended.Any())
         {
@@ -95,8 +94,9 @@
     {
         <p>No Registered Attendance for Events</p>
     }
+    <div>
+        <a asp-page="./Edit" asp-route-id="@Model.Guest?.GuestId">Edit</a> |
+        <a asp-page="./Index">Back to List</a>
+    </div>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Guest?.GuestId">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+

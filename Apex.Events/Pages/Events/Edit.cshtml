@@ -5,39 +5,40 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Event</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="center-container">
+        <h1>Edit - Event</h1>
+        <hr />
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="EventId" />
+            <br />
             <div class="form-group">
                 <span class="text-danger">*</span>
-                <label asp-for="EventName" class="control-label"></label>
+                <label asp-for="EventName" class="control-label">Name of Event</label>
                 <input asp-for="EventName" class="form-control" />
                 <span asp-validation-for="EventName" class="text-danger"></span>
                 <br />
 
-                <label class = "control-label">Event Type</label>
+                <label class = "control-label">Type of Event</label>
                 <input class = "form-control" value="@Model.Event?.EventType" readonly />
+                <br />
 
-                <label class="control-label">Event Date</label>
+                <label class="control-label">Date of Event</label>
                 <input class="form-control" value="@Model.Event?.EventDate" readonly />
 
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+        <div>
+            <a asp-page="./Index">Back to List</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -5,12 +5,10 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Event</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="center-container">
+        <h1>Create - Event</h1>
+        <hr />
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -33,16 +31,16 @@
                 <select asp-for="Event.VenueCode" class="form-control" asp-items="Model.VenueItems">
 					<option value="">-- Select venue --</option>
                 </select>
+                <br />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+        <div>
+            <a asp-page="Index">Back to List</a>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -5,10 +5,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Event</h4>
+<div class="center-container">
+    <h1><b>Event - Details</b></h1>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -38,7 +37,7 @@
         </dd>
     </dl>
 
-    <h4>@($"Booked Guests: (Total Count of Guests: {Model.Event.GuestBookings!.Count})")</h4>
+    <h4><b>@($"Booked Guests: (Total Count of Guests: {Model.Event.GuestBookings!.Count})")</b></h4>
     @if (Model.Event.GuestBookings is { Count: > 0 })
     {
         <ul>
@@ -67,7 +66,7 @@
         <p>No guests have booked for this event yet.</p>
     }
 
-    <h4>Food Bookings</h4>
+    <h4><b>Food Bookings</b></h4>
     @if (Model.FoodBookings is { Count: > 0 })
     {
         <ul>
@@ -95,19 +94,18 @@
         <br />
         <form method="post">
             <input type="hidden" asp-for="EventId" />
-            <h5><label asp-for="SelectedVenueCode">Change Venue</label></h5>
+            <h5><b><label asp-for="SelectedVenueCode">Change Venue</label></b></h5>
             <select asp-for="SelectedVenueCode" class="form-control" asp-items="Model.Venues">
                 <option value="">-- Reserve venue --</option>
             </select>
-
+            <br />
             <div class="form-group">
                 <input type="submit" value="Reserve Venue" class="btn btn-primary" />
             </div>
-            <br />
         </form>
     </div>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <div>
+        <a asp-page="./Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
+        <a asp-page="./Index">Back to List</a>
+    </div>
 </div>
