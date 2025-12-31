@@ -87,157 +87,157 @@ namespace Apex.Events.Services
         }
 
         // Async method to fetch the available suitable venues.
-        public async Task<IReadOnlyList<AvailabilityDTO>> GetAvailableSuitableVenuesAsync(
-            string eventType,
-            DateTime beginDate,
-            DateTime? endDate = null)
-        {
-            // Validate event type
-            if (string.IsNullOrWhiteSpace(eventType))
-            {
-                throw new ArgumentNullException("Event type is required.", nameof(eventType));
-            }
-            // Construct query
-            var query = $"eventType={Uri.EscapeDataString(eventType)}&beginDate={beginDate:yyyy-MM-dd}";
-            // Check if the endDate parameter has a value
-            if (endDate.HasValue)
-            {
-                query += $"&endDate={endDate.Value:yyyy-MM-dd}";
-            }
+        //public async Task<IReadOnlyList<AvailabilityDTO>> GetAvailableSuitableVenuesAsync(
+        //    string eventType,
+        //    DateTime beginDate,
+        //    DateTime? endDate = null)
+        //{
+        //    // Validate event type
+        //    if (string.IsNullOrWhiteSpace(eventType))
+        //    {
+        //        throw new ArgumentNullException("Event type is required.", nameof(eventType));
+        //    }
+        //    // Construct query
+        //    var query = $"eventType={Uri.EscapeDataString(eventType)}&beginDate={beginDate:yyyy-MM-dd}";
+        //    // Check if the endDate parameter has a value
+        //    if (endDate.HasValue)
+        //    {
+        //        query += $"&endDate={endDate.Value:yyyy-MM-dd}";
+        //    }
 
-            // Send the GET request to the Availability endpoint
-            var response = await _httpClient.GetAsync($"{AvailabilityEndpoint}?{query}");
-            response.EnsureSuccessStatusCode();
+        //    // Send the GET request to the Availability endpoint
+        //    var response = await _httpClient.GetAsync($"{AvailabilityEndpoint}?{query}");
+        //    response.EnsureSuccessStatusCode();
 
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var availableVenues = JsonSerializer.Deserialize<List<AvailabilityDTO>>(responseJson, jsonOptions);
+        //    var responseJson = await response.Content.ReadAsStringAsync();
+        //    var availableVenues = JsonSerializer.Deserialize<List<AvailabilityDTO>>(responseJson, jsonOptions);
 
-            if(availableVenues == null)
-            {
-                throw new ArgumentNullException(nameof(response), "The availability API response is null.");
-            }
+        //    if(availableVenues == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(response), "The availability API response is null.");
+        //    }
 
-            return availableVenues;
-        }
+        //    return availableVenues;
+        //}
 
         // Async method to reserve a venue
-        public async Task<ReservationGetDTO> ReserveVenueAsync(DateTime eventDate, string venueCode)
-        {
-            // Validate venue code
-            if (string.IsNullOrWhiteSpace(venueCode))
-            {
-                throw new ArgumentNullException("Venue code is required.", nameof(venueCode));
-            }
+        //public async Task<ReservationGetDTO> ReserveVenueAsync(DateTime eventDate, string venueCode)
+        //{
+        //    // Validate venue code
+        //    if (string.IsNullOrWhiteSpace(venueCode))
+        //    {
+        //        throw new ArgumentNullException("Venue code is required.", nameof(venueCode));
+        //    }
 
-            var reservationDTO = new ReservationPostDTO
-            {
-                EventDate = eventDate.Date,
-                VenueCode = venueCode
-            };
+        //    var reservationDTO = new ReservationPostDTO
+        //    {
+        //        EventDate = eventDate.Date,
+        //        VenueCode = venueCode
+        //    };
 
-            var requestJson = JsonSerializer.Serialize(reservationDTO, jsonOptions);
-            // Create the HTTP request content
-            using var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+        //    var requestJson = JsonSerializer.Serialize(reservationDTO, jsonOptions);
+        //    // Create the HTTP request content
+        //    using var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
-            // Send the POST request to the Reservations endpoint
-            var response = await _httpClient.PostAsync(ReservationsEndpoint, content);
-            response.EnsureSuccessStatusCode();
+        //    // Send the POST request to the Reservations endpoint
+        //    var response = await _httpClient.PostAsync(ReservationsEndpoint, content);
+        //    response.EnsureSuccessStatusCode();
 
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var reservation = JsonSerializer.Deserialize<ReservationGetDTO>(responseJson, jsonOptions);
+        //    var responseJson = await response.Content.ReadAsStringAsync();
+        //    var reservation = JsonSerializer.Deserialize<ReservationGetDTO>(responseJson, jsonOptions);
 
-            if(reservation == null)
-            {
-                throw new ArgumentNullException(nameof(response), "The reservations API response is null.");
-            }
+        //    if(reservation == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(response), "The reservations API response is null.");
+        //    }
 
-            return reservation;
-        }
+        //    return reservation;
+        //}
 
         // Asnyc method to free a venue for a reservation
-        public async Task FreeReservationAsync(string reservationReference)
-        {
-            // Validate reservation reference
-            if (string.IsNullOrWhiteSpace(reservationReference))
-            {
-                throw new ArgumentNullException("Reservation reference is required.", nameof(reservationReference));
-            }
+        //public async Task FreeReservationAsync(string reservationReference)
+        //{
+        //    // Validate reservation reference
+        //    if (string.IsNullOrWhiteSpace(reservationReference))
+        //    {
+        //        throw new ArgumentNullException("Reservation reference is required.", nameof(reservationReference));
+        //    }
 
-            // Build the request URI
-            var requestUri = $"{ReservationsEndpoint}/{Uri.EscapeDataString(reservationReference)}";
+        //    // Build the request URI
+        //    var requestUri = $"{ReservationsEndpoint}/{Uri.EscapeDataString(reservationReference)}";
 
-            // Send the DELETE request to the Reservations endpoint
-            var response = await _httpClient.DeleteAsync(requestUri);
+        //    // Send the DELETE request to the Reservations endpoint
+        //    var response = await _httpClient.DeleteAsync(requestUri);
 
-            // Check if response is successful or if not found since a 404 indicates the reservation is already freed
-            if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                return;
-            }
+        //    // Check if response is successful or if not found since a 404 indicates the reservation is already freed
+        //    if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        //    {
+        //        return;
+        //    }
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            throw new InvalidOperationException($"Failed to free reservation. Status Code: {response.StatusCode}, Response: {responseBody}");
-        }
+        //    var responseBody = await response.Content.ReadAsStringAsync();
+        //    throw new InvalidOperationException($"Failed to free reservation. Status Code: {response.StatusCode}, Response: {responseBody}");
+        //}
 
         // Async method to free old reservation and reserve a new venue
-        public async Task<ReservationGetDTO> ChangeVenueReservationAsync(
-            string eventType,
-            DateTime eventDate,
-            string? currentVenueCode,
-            string? newVenueCode)
-        {
-            // Validate event type
-            if (string.IsNullOrWhiteSpace(eventType))
-            {
-                throw new ArgumentNullException(nameof(eventType), "Event type is required.");
-            }
-            // Validate new venue code
-            if (string.IsNullOrWhiteSpace(newVenueCode))
-            {
-                throw new ArgumentNullException(nameof(newVenueCode), "New venue code is required.");
-            }
+        //public async Task<ReservationGetDTO> ChangeVenueReservationAsync(
+        //    string eventType,
+        //    DateTime eventDate,
+        //    string? currentVenueCode,
+        //    string? newVenueCode)
+        //{
+        //    // Validate event type
+        //    if (string.IsNullOrWhiteSpace(eventType))
+        //    {
+        //        throw new ArgumentNullException(nameof(eventType), "Event type is required.");
+        //    }
+        //    // Validate new venue code
+        //    if (string.IsNullOrWhiteSpace(newVenueCode))
+        //    {
+        //        throw new ArgumentNullException(nameof(newVenueCode), "New venue code is required.");
+        //    }
 
-            // Check if the event currently has a reserved venue code and if the user selected the same venue again.
-            if(!string.IsNullOrWhiteSpace(currentVenueCode) && string.Equals(currentVenueCode, newVenueCode, StringComparison.OrdinalIgnoreCase))
-            {
-                return await GetReservationAsync($"{currentVenueCode}{eventDate:yyyyMMdd}");
-            }
+        //    // Check if the event currently has a reserved venue code and if the user selected the same venue again.
+        //    if(!string.IsNullOrWhiteSpace(currentVenueCode) && string.Equals(currentVenueCode, newVenueCode, StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return await GetReservationAsync($"{currentVenueCode}{eventDate:yyyyMMdd}");
+        //    }
 
-            // Check if requested venue is available and suitable.
-            var available = await GetAvailableSuitableVenuesAsync(eventType, eventDate.Date);
-            // Validate availability
-            var forReserve = available.Any(a => string.Equals(a.Code, newVenueCode, StringComparison.OrdinalIgnoreCase));
-            if (!forReserve)
-            {
-                throw new InvalidOperationException("The requested venue is not available/suitable for this event.");
-            }
+        //    // Check if requested venue is available and suitable.
+        //    var available = await GetAvailableSuitableVenuesAsync(eventType, eventDate.Date);
+        //    // Validate availability
+        //    var forReserve = available.Any(a => string.Equals(a.Code, newVenueCode, StringComparison.OrdinalIgnoreCase));
+        //    if (!forReserve)
+        //    {
+        //        throw new InvalidOperationException("The requested venue is not available/suitable for this event.");
+        //    }
 
-            // Free current reservation if it exists
-            if (!string.IsNullOrWhiteSpace(currentVenueCode))
-            {
-                var currentReference = $"{currentVenueCode}{eventDate:yyyyMMdd}";
-                await FreeReservationAsync(currentReference);
-            }
+        //    // Free current reservation if it exists
+        //    if (!string.IsNullOrWhiteSpace(currentVenueCode))
+        //    {
+        //        var currentReference = $"{currentVenueCode}{eventDate:yyyyMMdd}";
+        //        await FreeReservationAsync(currentReference);
+        //    }
 
-            // Now that the venue has been freed if needed, a new venue can be reserved.
-            return await ReserveVenueAsync(eventDate, newVenueCode);
-        }
+        //    // Now that the venue has been freed if needed, a new venue can be reserved.
+        //    return await ReserveVenueAsync(eventDate, newVenueCode);
+        //}
 
-        // Private async method to get reservation by reference.
-        private async Task<ReservationGetDTO> GetReservationAsync(string reference)
-        {
-            var response = await _httpClient.GetAsync($"{ReservationsEndpoint}/{Uri.EscapeDataString(reference)}");
-            response.EnsureSuccessStatusCode();
+        //// Private async method to get reservation by reference.
+        //private async Task<ReservationGetDTO> GetReservationAsync(string reference)
+        //{
+        //    var response = await _httpClient.GetAsync($"{ReservationsEndpoint}/{Uri.EscapeDataString(reference)}");
+        //    response.EnsureSuccessStatusCode();
 
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var reservation = JsonSerializer.Deserialize<ReservationGetDTO>(responseJson, jsonOptions);
+        //    var responseJson = await response.Content.ReadAsStringAsync();
+        //    var reservation = JsonSerializer.Deserialize<ReservationGetDTO>(responseJson, jsonOptions);
 
-            if(reservation == null)
-            {
-                throw new ArgumentNullException(nameof(response), "The reservations API response is null.");
-            }
+        //    if(reservation == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(response), "The reservations API response is null.");
+        //    }
 
-            return reservation;
-        }
+        //    return reservation;
+        //}
     }
 }

@@ -65,13 +65,16 @@ namespace Apex.Events.Pages.Events
             Event = evt;
             EventId = evt.EventId;
 
+            // Set the selected venue to the event's current venue
+            SelectedVenueCode = evt.VenueCode;
+
             // Retrieve FoodBookings using the service
             FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
 
             // Retrieve Venue name using the service
             VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
 
-            await RebuildVenueDropdownAsync(evt);
+            Venues = await _venuesService.GetVenuesSelectListAsync();   
 
             return Page();
         }
@@ -107,7 +110,7 @@ namespace Apex.Events.Pages.Events
                 Event = evt;
                 FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
                 VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
-                // Venues = await _venuesService.GetVenuesSelectListAsync();
+                Venues = await _venuesService.GetVenuesSelectListAsync();
                 return Page();
             }
 
@@ -117,12 +120,12 @@ namespace Apex.Events.Pages.Events
 
             try
             {
-                await _venuesService.ChangeVenueReservationAsync(
-                    evt.EventType,
-                    evt.EventDate.ToDateTime(TimeOnly.MinValue),
-                    oldVenueCode,
-                    newVenueCode
-                );
+                //await _venuesService.ChangeVenueReservationAsync(
+                //    evt.EventType,
+                //    evt.EventDate.ToDateTime(TimeOnly.MinValue),
+                //    oldVenueCode,
+                //    newVenueCode
+                //);
 
                 // Update the event's venue to the selected venue from the dropdown.
                 evt.VenueCode = newVenueCode;
@@ -140,6 +143,7 @@ namespace Apex.Events.Pages.Events
                 Event = evt;
                 FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
                 VenueName = await _venuesService.GetVenueNameAsync(evt.VenueCode);
+                Venues = await _venuesService.GetVenuesSelectListAsync();
                 return Page();
             }
         }
@@ -171,7 +175,7 @@ namespace Apex.Events.Pages.Events
                     Text = currentVenueText
                 });
             }
-
+        
             // By default, select the current venue in the dropdown.
             SelectedVenueCode = evt.VenueCode;
         }
