@@ -35,6 +35,16 @@ namespace Apex.Events.Pages.Guests
                 return Page();
             }
 
+            // Check for duplicate guest input by email
+            var existingGuest = await _context.Guests
+                .FirstOrDefaultAsync(g => g.Email == Guest.Email);
+
+            if(existingGuest != null)
+            {
+                ModelState.AddModelError("Guest.Email", "A guest with this email already exists.");
+                return Page();
+            }
+
             try
             {
                 _context.Guests.Add(Guest);

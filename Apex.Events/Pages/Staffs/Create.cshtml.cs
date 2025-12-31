@@ -35,6 +35,18 @@ namespace Apex.Events.Pages.Staffs
                 return Page();
             }
 
+            // Check for duplicate staff input by first name, last name and role.
+            var existingStaff = await _context.Staff
+                .FirstOrDefaultAsync(s => s.FirstName == Staff.FirstName &&
+                                           s.LastName == Staff.LastName &&
+                                           s.Role == Staff.Role);
+            
+            if(existingStaff != null)
+            {
+                ModelState.AddModelError(string.Empty, "A staff member with this name and role already exists.");
+                return Page();
+            }
+
             try
             {
                 _context.Staff.Add(Staff);

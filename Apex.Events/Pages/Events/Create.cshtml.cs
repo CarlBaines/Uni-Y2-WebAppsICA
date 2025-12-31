@@ -46,6 +46,19 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
 
+            // Check for duplicate event by name, date and venue.
+            var existingEvent = await _context.Events
+                .FirstOrDefaultAsync(e => e.EventName == Event.EventName
+                    && e.EventDate == Event.EventDate
+                    && e.VenueCode == Event.VenueCode);
+            
+            if(existingEvent != null)
+            {
+                ModelState.AddModelError(string.Empty, "A duplicate event has been entered.");
+                await PopulateDropdownsAsync(Event);
+                return Page();
+            }
+
             //string? reservationReference = null;
 
             try
