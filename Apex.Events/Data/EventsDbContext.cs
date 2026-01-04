@@ -4,7 +4,7 @@ namespace Apex.Events.Data
 {
     public class EventsDbContext : DbContext
     {
-        // Db Set Attributes
+        // Db Set Attributes (instance names become table names)
         public DbSet<Guest> Guests { get; set; }
         public DbSet<GuestBooking> GuestBookings { get; set; }
         public DbSet<Event> Events { get; set; }

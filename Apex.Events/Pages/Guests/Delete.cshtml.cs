@@ -18,9 +18,11 @@ namespace Apex.Events.Pages.Guests
             _context = context;
         }
 
+        // Bind property to hold the Guest entity
         [BindProperty]
         public Guest Guest { get; set; } = default!;
 
+        // On get method to retrieve the guest details for confirmation
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -28,6 +30,7 @@ namespace Apex.Events.Pages.Guests
                 return NotFound();
             }
 
+            // Retrieve the guest entity based on the provided id
             var guest = await _context.Guests.FirstOrDefaultAsync(m => m.GuestId == id);
 
             if (guest == null)
@@ -39,6 +42,7 @@ namespace Apex.Events.Pages.Guests
             return Page();
         }
 
+        // On post method to handle the deletion of the guest
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null)
@@ -46,10 +50,12 @@ namespace Apex.Events.Pages.Guests
                 return NotFound();
             }
 
+            // Find the guest entity to delete
             var guest = await _context.Guests.FindAsync(id);
             if (guest != null)
             {
                 Guest = guest;
+                // try, catch block to handle potential concurrency issues during deletion
                 try
                 {
                     _context.Guests.Remove(Guest);
@@ -62,6 +68,7 @@ namespace Apex.Events.Pages.Guests
                 }
             }
 
+            // Redirect to the index page after successful deletion
             return RedirectToPage("./Index");
         }
     }

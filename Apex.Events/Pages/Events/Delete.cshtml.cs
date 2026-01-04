@@ -18,9 +18,11 @@ namespace Apex.Events.Pages.Events
             _context = context;
         }
 
+        // Bind the Event model to the page.
         [BindProperty]
         public Event Event { get; set; } = default!;
 
+        // On get method to retrieve the event details for deletion confirmation.
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -28,6 +30,7 @@ namespace Apex.Events.Pages.Events
                 return NotFound();
             }
 
+            // Retrieve the event from the database.
             var evt = await _context.Events.FirstOrDefaultAsync(m => m.EventId == id);
 
             if (evt == null)
@@ -43,6 +46,7 @@ namespace Apex.Events.Pages.Events
             return Page();
         }
 
+        // On post method to handle the deletion of the event.
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null)
@@ -55,10 +59,12 @@ namespace Apex.Events.Pages.Events
                 });
             }
 
+            // Retrieve the event to be deleted.
             var evt = await _context.Events.FindAsync(id);
             if (evt != null)
             {
                 Event = evt;
+                // try catch block to handle potential database update exceptions when deleting the event.
                 try
                 {
                     _context.Events.Remove(Event);
@@ -71,6 +77,7 @@ namespace Apex.Events.Pages.Events
                 }
             }
 
+            // Redirect to the index page after successful deletion.
             return RedirectToPage("./Index");
         }
     }

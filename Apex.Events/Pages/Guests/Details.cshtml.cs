@@ -18,6 +18,8 @@ namespace Apex.Events.Pages.Guests
             _context = context;
         }
 
+        [BindProperty]
+        // Guest property to hold the guest details
         public Guest Guest { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -71,6 +73,7 @@ namespace Apex.Events.Pages.Guests
                 booking.IsAttending = isChecked;
             }
 
+            // try, catch block to handle potential database update errors when registering attendance.
             try
             {
                 await _context.SaveChangesAsync();

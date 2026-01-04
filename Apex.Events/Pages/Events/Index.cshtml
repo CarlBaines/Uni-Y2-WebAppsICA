@@ -41,6 +41,7 @@
                 </td>
                 <td>
                     <a asp-page="./BookGuest" asp-route-id="@item.EventId">Book Guest</a> |
+                    @* Checks if the event has an associated food booking (displays the book food page if none). *@
                     @if (!Model.EventFoodBookingCheck.TryGetValue(item.EventId, out var hasFoodBooking) || !hasFoodBooking)
                     {
                         <text><a asp-page="./AddFoodBooking" asp-route-id="@item.EventId">Book Food</a> | </text>

@@ -33,6 +33,7 @@
     <h5><b>Booked Events</b></h5>
     @if(Model.Guest?.GuestBookings is { Count: > 0 })
     {
+        @* This HTML is not rendered if no guest bookings exist. *@
         <form method="post">
             <input type ="hidden" name="guestId" value="@Model.Guest.GuestId" />
             <ul>

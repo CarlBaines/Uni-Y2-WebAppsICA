@@ -8,6 +8,7 @@ namespace Apex.Events.Services
     public class MenuService
     {
         private readonly HttpClient _httpClient;
+        // Endpoint for fetching menu data.
         private const string MenusEndpoint = "api/GetMenu";
 
         public MenuService(HttpClient httpClient)
@@ -23,14 +24,17 @@ namespace Apex.Events.Services
         // Async method to fetch menu items.
         public async Task<List<MenuDTO>> GetMenusAsync()
         {
+            // Make an HTTP GET request to fetch menu data.
             var response = await _httpClient.GetAsync(MenusEndpoint);
             response.EnsureSuccessStatusCode();
 
+            // Read and deserialize the JSON response.
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
             var menus = JsonSerializer.Deserialize<List<MenuDTO>>(jsonResponse, jsonOptions);
 
-            if(menus == null)
+            // Check for null and throw an exception if necessary.
+            if (menus == null)
             {
                 throw new ArgumentNullException(nameof(response), "The menus response is null");
             }
@@ -40,9 +44,12 @@ namespace Apex.Events.Services
         // Async method to fetch menu type list items.
         public async Task<List<SelectListItem>> GetMenuTypesSelectListAsync()
         {
+            // Fetch menus using method above.
             var menus = await GetMenusAsync();
+            // Convert to SelectListItem format.
             var selectList = new List<SelectListItem>();
-            if(menus != null)
+            // Populate the select list if menus are available.
+            if (menus != null)
             {
                 selectList = menus.Select(m => new SelectListItem
                 {

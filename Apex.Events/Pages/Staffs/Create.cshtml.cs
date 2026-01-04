@@ -24,12 +24,14 @@ namespace Apex.Events.Pages.Staffs
             return Page();
         }
 
+        // Bind property to Staff model
         [BindProperty]
         public Staff Staff { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Validate the model state
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -40,13 +42,15 @@ namespace Apex.Events.Pages.Staffs
                 .FirstOrDefaultAsync(s => s.FirstName == Staff.FirstName &&
                                            s.LastName == Staff.LastName &&
                                            s.Role == Staff.Role);
-            
-            if(existingStaff != null)
+
+            // If a duplicate is found, add a model error and return the page.
+            if (existingStaff != null)
             {
                 ModelState.AddModelError(string.Empty, "A staff member with this name and role already exists.");
                 return Page();
             }
 
+            // try, catch block to handle potential database update exceptions when creating new staff.
             try
             {
                 _context.Staff.Add(Staff);
@@ -58,6 +62,7 @@ namespace Apex.Events.Pages.Staffs
                 return Page();
             }
 
+            // Redirect to Index page upon successful creation.
             return RedirectToPage("./Index");
         }
     }

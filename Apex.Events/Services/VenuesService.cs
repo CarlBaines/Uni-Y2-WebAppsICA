@@ -71,10 +71,12 @@ namespace Apex.Events.Services
         // Async method to fetch a venue by its code.
         public async Task<VenueDto?> GetVenueByCodeAsync(string venueCode)
         {
+            // Validate venue code
             if (string.IsNullOrWhiteSpace(venueCode))
             {
                 return null;
             }
+            // Fetch venues
             var venues = await GetVenuesAsync();
             return venues.FirstOrDefault(v => string.Equals(v.Code, venueCode));
         }

@@ -32,7 +32,9 @@ namespace Apex.Events.Pages.Events
             // Check for food bookings for each event
             foreach (var evt in Event)
             {
+                // Asynchronously get food bookings for the event
                 var bookings = await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId);
+                // Update the dictionary with the result
                 EventFoodBookingCheck[evt.EventId] = bookings.Count > 0;
             }
         }

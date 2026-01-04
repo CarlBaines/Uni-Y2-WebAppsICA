@@ -19,9 +19,11 @@ namespace Apex.Events.Pages.Staffs
             _context = context;
         }
 
+        // Bind the staff model to the page.
         [BindProperty]
         public Staff Staff { get; set; } = default!;
 
+        // OnGetAsync method to retrieve the staff record for editing.
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -29,6 +31,7 @@ namespace Apex.Events.Pages.Staffs
                 return NotFound();
             }
 
+            // Retrieve the staff record from the database context.
             var staff =  await _context.Staff.FirstOrDefaultAsync(m => m.EventStaffId == id);
             if (staff == null)
             {
@@ -38,23 +41,26 @@ namespace Apex.Events.Pages.Staffs
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+        // OnPostAsync method to handle the form submission for editing the staff record.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Validate the model state.
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
+            // Mark the staff entity as modified.
             _context.Attach(Staff).State = EntityState.Modified;
 
+            // try, catch block to handle concurrency exceptions when saving an edited staff record.
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
+                // Check if the staff record still exists in the database.
                 if (!StaffExists(Staff.EventStaffId))
                 {
                     return NotFound();
@@ -63,9 +69,11 @@ namespace Apex.Events.Pages.Staffs
                 return Page();
             }
 
+            // Redirect to the index page after successful edit.
             return RedirectToPage("./Index");
         }
 
+        // Helper method to check if a staff record exists by ID.
         private bool StaffExists(int id)
         {
             return _context.Staff.Any(e => e.EventStaffId == id);

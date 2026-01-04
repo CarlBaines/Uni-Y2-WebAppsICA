@@ -24,8 +24,10 @@ namespace Apex.Catering.Controllers
         [HttpGet("/api/FoodItems")]
         public async Task<ActionResult<IEnumerable<FoodItem>>> GetFoodItems()
         {
+            // Retrieve all food items from the database context.
             var foodItems = await _context.FoodItems.ToListAsync();
-            if(foodItems.Count == 0)
+            // If no food items are found, return a NoContent response.
+            if (foodItems.Count == 0)
             {
                 return NoContent();
             }
@@ -36,6 +38,7 @@ namespace Apex.Catering.Controllers
         [HttpGet("/api/FoodItems/{id}")]
         public async Task<ActionResult<FoodItem>> GetFoodItem(int id)
         {
+            // Find the food item by its ID.
             var foodItem = await _context.FoodItems.FindAsync(id);
 
             if (foodItem == null)
@@ -56,6 +59,7 @@ namespace Apex.Catering.Controllers
         [HttpPut("/api/PutFoodItem/{id}")]
         public async Task<IActionResult> PutFoodItem(int id, FoodItem foodItem)
         {
+            // Validate that the route ID matches the body FoodItemId.
             if (id != foodItem.FoodItemId)
             {
                 return BadRequest(new ProblemDetails
@@ -74,6 +78,7 @@ namespace Apex.Catering.Controllers
             }
             catch (DbUpdateConcurrencyException e)
             {
+                // Check if the food item exists before concluding it's a concurrency issue.
                 if (!FoodItemExists(id))
                 {
                     return NotFound(new ProblemDetails
@@ -113,7 +118,7 @@ namespace Apex.Catering.Controllers
                     Status = StatusCodes.Status500InternalServerError,
                 });
             }
-
+            // Return a CreatedAtAction response returning the id of the newly created food item.
             return CreatedAtAction("GetFoodItem", new { id = foodItem.FoodItemId }, foodItem);
         }
 
@@ -121,6 +126,7 @@ namespace Apex.Catering.Controllers
         [HttpDelete("/api/DeleteFoodItem/{id}")]
         public async Task<IActionResult> DeleteFoodItem(int id)
         {
+            // Find the food item by its ID.
             var foodItem = await _context.FoodItems.FindAsync(id);
             if (foodItem == null)
             {
@@ -147,9 +153,11 @@ namespace Apex.Catering.Controllers
                 });
             }
 
+            // Return an OK response with the id of the deleted food item.
             return Ok(new { FoodItemId = id }); 
         }
 
+        // Method to check if a food item exists by its ID.
         private bool FoodItemExists(int id)
         {
             return _context.FoodItems.Any(e => e.FoodItemId == id);

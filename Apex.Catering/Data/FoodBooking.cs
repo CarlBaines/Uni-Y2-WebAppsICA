@@ -15,7 +15,6 @@ namespace Apex.Catering.Data
         [Required]
         // Foreign key to the Menu entity.
         public int MenuId { get; set; }
-        /* Comment on this in README */
         // Navigation property to the Menu entity.
         // Many food bookings relate to one Menu (the many side of the many-to-one).
         public Menu? Menu { get; set; }

@@ -40,6 +40,7 @@
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
+                        @* Display a remove guest booking link only if a booking is associated with the guest. *@
                         @if (item.GuestBookings != null && item.GuestBookings.Any())
                         {
                             <a asp-page="./RemoveGuestBooking" asp-route-id="@item.GuestId">Remove Booking</a>

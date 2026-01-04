@@ -18,8 +18,10 @@ namespace Apex.Events.Pages.Guests
             _context = context;
         }
 
+        // IList is used here to represent a collection of Guest entities.
         public IList<Guest> Guest { get;set; } = default!;
 
+        // OnGet async method to fetch the list of guests including their bookings.
         public async Task OnGetAsync()
         {
             Guest = await _context.Guests

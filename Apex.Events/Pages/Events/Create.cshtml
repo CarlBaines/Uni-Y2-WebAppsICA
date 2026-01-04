@@ -21,12 +21,14 @@
                 <input asp-for="Event.EventDate" class="form-label" />
                 <span asp-validation-for="Event.EventDate" class="text-danger"></span>
                 <br />
+                @*Event Type Dropdown Section*@
                 <label asp-for="Event.EventType" class="control-label">Event Type</label>
                 <select asp-for="Event.EventType" class="form-control" asp-items="Model.EventTypeItems">
                     <option value="">-- Select event type --</option>
                 </select>
                 <span asp-validation-for="Event.EventType" class="text-danger"></span>
                 <br />
+                @*Venue Code Dropdown Section*@
                 <label asp-for="Event.VenueCode" class="control-label">Venue</label>
                 <select asp-for="Event.VenueCode" class="form-control" asp-items="Model.VenueItems">
 					<option value="">-- Select venue --</option>

@@ -24,13 +24,15 @@ namespace Apex.Events.Pages.Events
             _menuService = menuService;
         }
 
+        // On get method to load the page
         public async Task<IActionResult> OnGetAsync(int id)
         {
             EventId = id;
-            await PopulateMenusAsync();
+            await PopulateMenusAsync(); // Populate the menu options
             return Page();
         }
 
+        // Bind properties for form inputs
         [BindProperty]
         public int EventId { get; set; }
         [BindProperty]
@@ -40,6 +42,7 @@ namespace Apex.Events.Pages.Events
         [BindProperty]
         public int? NumberOfGuests { get; set; }
 
+        // List of menus for the dropdown
         public List<SelectListItem> Menus { get; set; } = [];
 
 
@@ -62,12 +65,14 @@ namespace Apex.Events.Pages.Events
                 ModelState.AddModelError(nameof(NumberOfGuests), "Please enter a valid number of guests.");
             }
 
+            // If model state is invalid, reload the page.
             if (!ModelState.IsValid)
             {
                 await PopulateMenusAsync();
                 return Page();
             }
 
+            // try catch block to handle any errors during food booking creation
             try
             {
                 var booking = new FoodBookingDTO
@@ -86,9 +91,11 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
 
+            // Redirect to the event details page after successful creation passing the event id.
             return RedirectToPage("./Details", new { id = EventId });
         }
 
+        // Helper method to populate the menu options for the dropdown.
         private async Task PopulateMenusAsync()
         {
             Menus = await _menuService.GetMenuTypesSelectListAsync();

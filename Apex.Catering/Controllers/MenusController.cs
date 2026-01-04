@@ -24,8 +24,10 @@ namespace Apex.Catering.Controllers
         [HttpGet("/api/GetMenu")]
         public async Task<ActionResult<IEnumerable<Menu>>> GetMenus()
         {
+            // Check if there are any menus in the database context.
             var menus = await _context.Menus.ToListAsync();
-            if(menus.Count == 0)
+            // If no menus exist, return a NoContent response.
+            if (menus.Count == 0)
             {
                 return NoContent();
             }
@@ -36,8 +38,10 @@ namespace Apex.Catering.Controllers
         [HttpGet("/api/GetMenu/{id}")]
         public async Task<ActionResult<Menu>> GetMenu(int id)
         {
+            // Find the menu with the specified ID.
             var menu = await _context.Menus.FindAsync(id);
 
+            // If the menu does not exist, return a NotFound response.
             if (menu == null)
             {
                 return NotFound(new ProblemDetails
@@ -56,6 +60,7 @@ namespace Apex.Catering.Controllers
         [HttpPut("/api/PutMenu/{id}")]
         public async Task<IActionResult> PutMenu(int id, Menu menu)
         {
+            // Validate that the route ID matches the MenuId in the request body.
             if (id != menu.MenuId)
             {
                 return BadRequest(new ProblemDetails
@@ -74,6 +79,7 @@ namespace Apex.Catering.Controllers
             }
             catch (DbUpdateConcurrencyException e)
             {
+                // Check if the menu exists before deciding on the error response.
                 if (!MenuExists(id))
                 {
                     return NotFound(new ProblemDetails
@@ -114,7 +120,7 @@ namespace Apex.Catering.Controllers
                 });
 
             }
-
+            // Return a CreatedAtAction response with the location of the new menu.
             return CreatedAtAction("GetMenu", new { id = menu.MenuId }, menu);
         }
 
@@ -122,6 +128,7 @@ namespace Apex.Catering.Controllers
         [HttpDelete("/api/DeleteMenu/{id}")]
         public async Task<IActionResult> DeleteMenu(int id)
         {
+            // Find the menu with the specified ID.
             var menu = await _context.Menus.FindAsync(id);
             if (menu == null)
             {
@@ -140,6 +147,7 @@ namespace Apex.Catering.Controllers
             }
             catch(DbUpdateException e)
             {
+                // Handle potential database update exceptions.
                 return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
                 {
                     Title = "Database Update Error",
@@ -149,9 +157,11 @@ namespace Apex.Catering.Controllers
 
             }
 
+            // Return an OK response with the ID of the deleted menu.
             return Ok(new { MenuId = id });
         }
 
+        // Helper method to check if a menu exists by ID.
         private bool MenuExists(int id)
         {
             return _context.Menus.Any(e => e.MenuId == id);

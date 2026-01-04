@@ -19,11 +19,13 @@ namespace Apex.Events.Pages.Guests
             _context = context;
         }
 
+        // Bind property to hold the Guest
         [BindProperty]
         public Guest Guest { get; set; } = default!;
         // Bind property to hold the list of GuestBookings
         public IList<GuestBooking> GuestBookings { get; set; } = default!;
 
+        // OnGetAsync method to retrieve Guest and their GuestBookings
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -47,6 +49,7 @@ namespace Apex.Events.Pages.Guests
             return Page();
         }
 
+        // OnPostAsync method to handle deletion of a GuestBooking
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null)
@@ -54,9 +57,11 @@ namespace Apex.Events.Pages.Guests
                 return NotFound();
             }
 
+            // Find the GuestBooking to delete
             var guestbooking = await _context.GuestBookings.FindAsync(id);
             if (guestbooking != null)
             {
+                // try, catch block to handle potential database update exceptions when deleting a guest booking.
                 try
                 {
                     _context.GuestBookings.Remove(guestbooking);
@@ -69,6 +74,7 @@ namespace Apex.Events.Pages.Guests
                 }
             }
 
+            // Redirect back to the Index page after deletion
             return RedirectToPage("./Index");
         }
     }

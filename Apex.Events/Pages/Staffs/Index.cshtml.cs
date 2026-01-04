@@ -18,8 +18,10 @@ namespace Apex.Events.Pages.Staffs
             _context = context;
         }
 
+        // IList of Staff to hold the list of staff members
         public IList<Staff> Staff { get;set; } = default!;
 
+        // OnGetAsync method to retrieve the list of staff members asynchronously
         public async Task OnGetAsync()
         {
             Staff = await _context.Staff.ToListAsync();

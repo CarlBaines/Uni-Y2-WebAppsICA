@@ -18,8 +18,11 @@ namespace Apex.Events.Pages.Staffs
             _context = context;
         }
 
+        // Bind property to hold the Staff entity
+        [BindProperty]
         public Staff Staff { get; set; } = default!;
 
+        // On get async method to retrieve staff details
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -27,6 +30,7 @@ namespace Apex.Events.Pages.Staffs
                 return NotFound();
             }
 
+            // Retrieve the staff entity based on the provided id
             var staff = await _context.Staff.FirstOrDefaultAsync(m => m.EventStaffId == id);
             if (staff == null)
             {

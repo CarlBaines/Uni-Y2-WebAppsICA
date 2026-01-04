@@ -19,9 +19,11 @@ namespace Apex.Events.Pages.Guests
             _context = context;
         }
 
+        // Bind property to hold the Guest entity
         [BindProperty]
         public Guest Guest { get; set; } = default!;
 
+        // On get method to retrieve the guest by id for editing.
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -29,6 +31,7 @@ namespace Apex.Events.Pages.Guests
                 return NotFound();
             }
 
+            // Retrieve the guest from the database
             var guest =  await _context.Guests.FirstOrDefaultAsync(m => m.GuestId == id);
             if (guest == null)
             {
@@ -42,19 +45,23 @@ namespace Apex.Events.Pages.Guests
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Validate the model state
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
+            // Mark the guest entity as modified
             _context.Attach(Guest).State = EntityState.Modified;
 
+            // try, catch block to handle concurrency exceptions when saving the edited guest.
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
+                // Check if the guest still exists in the database
                 if (!GuestExists(Guest.GuestId))
                 {
                     return NotFound();
@@ -63,9 +70,11 @@ namespace Apex.Events.Pages.Guests
                 return Page();
             }
 
+            // Redirect to the index page after successful edit
             return RedirectToPage("./Index");
         }
 
+        // Helper method to check if a guest exists by id
         private bool GuestExists(int id)
         {
             return _context.Guests.Any(e => e.GuestId == id);

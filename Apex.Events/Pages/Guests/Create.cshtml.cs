@@ -19,17 +19,20 @@ namespace Apex.Events.Pages.Guests
             _context = context;
         }
 
+        // On get method to display the create guest page
         public IActionResult OnGet()
         {
             return Page();
         }
 
+        // Bind property to hold the guest data
         [BindProperty]
         public Guest Guest { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Validate model state.
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -39,12 +42,14 @@ namespace Apex.Events.Pages.Guests
             var existingGuest = await _context.Guests
                 .FirstOrDefaultAsync(g => g.Email == Guest.Email);
 
-            if(existingGuest != null)
+            // If a guest with the same email already exists, add a model error and return the page.
+            if (existingGuest != null)
             {
                 ModelState.AddModelError("Guest.Email", "A guest with this email already exists.");
                 return Page();
             }
 
+            // try, catch block to handle potential database concurrency issues when adding a new guest
             try
             {
                 _context.Guests.Add(Guest);
@@ -56,6 +61,7 @@ namespace Apex.Events.Pages.Guests
                 return Page();
             }
 
+            // Redirect to the index page upon successful creation
             return RedirectToPage("./Index");
         }
     }

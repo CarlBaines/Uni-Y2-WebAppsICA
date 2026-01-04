@@ -19,6 +19,7 @@ namespace Apex.Events.Pages.Events
             _context = context;
         }
 
+        // Bind the Guest model.
         [BindProperty]
         public Guest Guest { get; set; } = new Guest();
 
@@ -28,6 +29,7 @@ namespace Apex.Events.Pages.Events
 
         public IActionResult OnGet(int id)
         {
+            // Validate the Event Id.
             if (id <= 0)
             {
                 return NotFound(new ProblemDetails
@@ -38,6 +40,7 @@ namespace Apex.Events.Pages.Events
                 });
             }
 
+            // Check if the event exists.
             var eventExists = _context.Events.Any(e => e.EventId == id);
             if (!eventExists)
             {
@@ -56,12 +59,14 @@ namespace Apex.Events.Pages.Events
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Validate the model state.
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            if(EventId <= 0)
+            // Validate the Event Id.
+            if (EventId <= 0)
             {
                 ModelState.AddModelError(string.Empty, "Invalid event id");
                 return Page();
@@ -104,6 +109,7 @@ namespace Apex.Events.Pages.Events
                 EventId = EventId
             };
 
+            // try catch block to handle potential database errors when adding the guest booking.
             try
             {
                 _context.GuestBookings.Add(booking);
@@ -115,6 +121,7 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
 
+            // Redirect to the event details page after successful booking passing the eventid.
             return RedirectToPage("./Details", new { id = EventId });
         }
     }

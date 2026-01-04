@@ -59,16 +59,20 @@ app.MapRazorPages();
 // Minimal API for Catering validation: GET api/Events/{id}
 app.MapGet("api/Events/{id:int}", async(int id, EventsDbContext db) =>
 {
+    // Retrieve the event from the database
     var evt = await db.Events.FindAsync(id);
-    if(evt == null)
+    // If not found, return a 404 Not Found response
+    if (evt == null)
     {
         return Results.NotFound(new { message = $"Event {id} not found" });
     }
+    // Return the event details
     return Results.Ok(evt);
 });
 
 app.Run();
 
+// Helper method to seed the database using the DbTestDataInitialiser service.
 void AddSeedData(IHost host)
 {
     using var scope = host.Services.CreateScope();

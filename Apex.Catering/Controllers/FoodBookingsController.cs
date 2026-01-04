@@ -51,6 +51,7 @@ namespace Apex.Catering.Controllers
         [HttpGet("ForEvent/{eventId:int}")]
         public async Task<ActionResult<IEnumerable<FoodBookingDTO>>> GetFoodBookingForEvent(int eventId)
         {
+            // Retrieve all food bookings for a specific event and map them to DTOs.
             var foodBookings = await _context.FoodBookings
                 .Where(fb => fb.EventId == eventId)
                 .Select(fb => new FoodBookingDTO
@@ -103,6 +104,7 @@ namespace Apex.Catering.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutFoodBooking(int id, FoodBookingDTO foodBookingDto)
         {
+            // Validate that the route id matches the body FoodBookingId.
             if (id != foodBookingDto.FoodBookingId)
             {
                 return BadRequest(new ProblemDetails
@@ -124,7 +126,8 @@ namespace Apex.Catering.Controllers
                     Status = StatusCodes.Status404NotFound
                 });
             }
-            
+
+            // Validate MenuId if it has changed.
             if (existing.MenuId != foodBookingDto.MenuId)
             {
                 var menu = await _context.Menus.FindAsync(foodBookingDto.MenuId);
@@ -203,6 +206,7 @@ namespace Apex.Catering.Controllers
 
             try
             {
+                // Check if the event id exists via Events API.
                 eventApiResponse = await client.GetAsync($"api/Events/{foodBooking.EventId}");
             }
             catch (HttpRequestException e)
@@ -286,6 +290,7 @@ namespace Apex.Catering.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteFoodBooking(int id)
         {
+            // Find the food booking by id.
             var foodBooking = await _context.FoodBookings.FindAsync(id);
             if (foodBooking == null)
             {

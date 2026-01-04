@@ -28,6 +28,7 @@
             <br />
             @Html.DisplayFor(d => d.Event.EventDate)
             <br />
+            @* Validates the venue name for the event *@
             @if (!string.IsNullOrWhiteSpace(Model.VenueName))
             {
                 @Html.DisplayFor(vn => vn.VenueName)
@@ -37,9 +38,11 @@
         </dd>
     </dl>
 
+    @* Displays total booked guest count *@
     <h4><b>@($"Booked Guests: (Total Count of Guests: {Model.Event.GuestBookings!.Count})")</b></h4>
     @if (Model.Event.GuestBookings is { Count: > 0 })
     {
+        @* This section of HTML is only rendered if the number of guest bookings for the event is more than 0. *@
         <ul>
             @foreach(var booking in Model.Event.GuestBookings)
             {
@@ -69,6 +72,7 @@
     <h4><b>Food Bookings</b></h4>
     @if (Model.FoodBookings is { Count: > 0 })
     {
+        @* This section of HTML is only rendered if the number of guest bookings for the event is more than 0. *@
         <ul>
             @foreach(var fb in Model.FoodBookings)
             {
@@ -95,6 +99,7 @@
         <form method="post">
             <input type="hidden" asp-for="EventId" />
             <h5><b><label asp-for="SelectedVenueCode">Change Venue</label></b></h5>
+            @* Dropdown for venue reservation *@
             <select asp-for="SelectedVenueCode" class="form-control" asp-items="Model.Venues">
                 <option value="">-- Reserve venue --</option>
             </select>

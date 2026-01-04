@@ -69,6 +69,7 @@ namespace Apex.Events.Data
             };
             _context.GuestBookings.AddRange(bookings);
 
+            // try catch block to handle potential DbUpdateException
             try
             {
                 _context.SaveChanges();

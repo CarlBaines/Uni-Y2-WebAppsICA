@@ -18,6 +18,7 @@ namespace Apex.Events.Pages.Events
         private readonly EventTypesService _eventTypesService;
         private readonly VenuesService _venuesService;
 
+        // Dropdown items
         public List<SelectListItem> EventTypeItems { get; set; } = [];
         public List<SelectListItem> VenueItems { get; set; } = [];
 
@@ -28,18 +29,21 @@ namespace Apex.Events.Pages.Events
             _venuesService = venuesService;
         }
 
+        // OnGetAsync method to populate dropdowns
         public async Task<IActionResult> OnGetAsync(int eventId)
         {
             await PopulateDropdownsAsync(Event);
             return Page();
         }
 
+        // BindProperty to bind the Event model
         [BindProperty]
         public Event Event { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Validate the model state
             if (!ModelState.IsValid)
             {
                 await PopulateDropdownsAsync(Event);
@@ -51,8 +55,9 @@ namespace Apex.Events.Pages.Events
                 .FirstOrDefaultAsync(e => e.EventName == Event.EventName
                     && e.EventDate == Event.EventDate
                     && e.VenueCode == Event.VenueCode);
-            
-            if(existingEvent != null)
+
+            // If a duplicate event is found, return an error.
+            if (existingEvent != null)
             {
                 ModelState.AddModelError(string.Empty, "A duplicate event has been entered.");
                 await PopulateDropdownsAsync(Event);
@@ -95,9 +100,11 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
 
+            // On successful creation, redirect to the Index page
             return RedirectToPage("./Index");
         }
 
+        // Helper method to populate dropdown lists
         private async Task PopulateDropdownsAsync(Event? evt)
         {
             EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();

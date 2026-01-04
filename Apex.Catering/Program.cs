@@ -37,6 +37,7 @@ app.MapControllers();
 
 app.Run();
 
+// Helper method to add seed data to the database using the DbTestDataInitialiser service
 void AddSeedData(IHost host)
 {
     using var scope = host.Services.CreateScope();

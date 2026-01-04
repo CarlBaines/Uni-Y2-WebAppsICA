@@ -23,6 +23,7 @@ namespace Apex.Events.Pages.Events
         // This event is for display purposes only. It is not bound on POST.
         public Event? Event { get; set; }
 
+        // Binded event id for POST.
         [BindProperty]
         public int EventId { get; set; }
 
@@ -39,6 +40,7 @@ namespace Apex.Events.Pages.Events
                 return NotFound();
             }
 
+            // Fetch the event to edit.
             var evt = await _context.Events.FirstOrDefaultAsync(m => m.EventId == id);
             if (evt == null)
             {
@@ -63,6 +65,7 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
 
+            // Fetch the event to update.
             var evt = await _context.Events.FirstOrDefaultAsync(m => m.EventId == EventId);
             if(evt == null)
             {
@@ -72,6 +75,7 @@ namespace Apex.Events.Pages.Events
             // Updates only the EventName property.
             evt.EventName = EventName;
 
+            // try catch block to handle concurrency and database update exceptions when saving the edited event.
             try
             {
                 await _context.SaveChangesAsync();
