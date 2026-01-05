@@ -23,12 +23,16 @@
                 <th>
                     @Html.DisplayNameFor(d => d.Event[0].EventDate)
                 </th>
+                <th>
+                    Status
+                </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
         @foreach (var item in Model.Event)
         {
+            var hasFoodBooking = Model.EventFoodBookingCheck.TryGetValue(item.EventId, out var hasFood) && hasFood;
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.EventName)
@@ -40,14 +44,38 @@
                     @Html.DisplayFor(modelItem => item.EventDate)
                 </td>
                 <td>
-                    <a asp-page="./BookGuest" asp-route-id="@item.EventId">Book Guest</a> |
-                    @* Checks if the event has an associated food booking (displays the book food page if none). *@
-                    @if (!Model.EventFoodBookingCheck.TryGetValue(item.EventId, out var hasFoodBooking) || !hasFoodBooking)
+                    @* Checks if each event has been cancelled *@
+                    @if (item.IsCancelled)
                     {
-                        <text><a asp-page="./AddFoodBooking" asp-route-id="@item.EventId">Book Food</a> | </text>
+                         <span class="badge bg-danger" title="This event has been cancelled">
+                            ❌ Cancelled
+                         </span>
                     }
-                    <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.EventId">Details</a> |
+                    @* Checks if each event has a first aider assigned to it. *@
+                    else if (!Model.EventFirstAiderCheck.TryGetValue(item.EventId, out var hasFirstAider) || !hasFirstAider)
+                    {
+                        <span class="badge bg-warning text-dark" title="No first aider assigned to this event">
+                            ⚠️ No First Aider
+                        </span>
+                    }
+                </td>
+                <td>
+                    @if (!item.IsCancelled)
+                    {
+                        <a asp-page="./BookGuest" asp-route-id="@item.EventId">Book Guest</a>
+                        @:&nbsp;|&nbsp;
+                        if (!hasFoodBooking)
+                        {
+                            <a asp-page="./AddFoodBooking" asp-route-id="@item.EventId">Book Food</a>
+                            @:&nbsp;|&nbsp;
+                        }
+                        <a asp-page="./Edit" asp-route-id="@item.EventId">Edit</a>
+                        @:&nbsp;|&nbsp;
+                        <a asp-page="./Details" asp-route-id="@item.EventId">Details</a>
+                        @:&nbsp;|&nbsp;
+                        <a asp-page="./CancelEvent" asp-route-id="@item.EventId">Cancel</a>
+                        @:&nbsp;|&nbsp;
+                    }
                     <a asp-page="./Delete" asp-route-id="@item.EventId">Delete</a>
                 </td>
             </tr>

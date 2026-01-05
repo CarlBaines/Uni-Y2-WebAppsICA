@@ -34,6 +34,14 @@
 					<option value="">-- Select venue --</option>
                 </select>
                 <br />
+                @*Staff Assignment Section (Optional)*@
+                <label class="control-label">Assign Staff (Optional)</label>
+                <select name="SelectedStaffIds" class="form-control" asp-items="Model.StaffItems">
+                    <option value="">-- Select staff --</option>
+                </select>
+                <label class="control-label">Assignment Name</label>
+                <input name="StaffingNames" class="form-control" placeholder="e.g., Event Coordinator" />
+                <br />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

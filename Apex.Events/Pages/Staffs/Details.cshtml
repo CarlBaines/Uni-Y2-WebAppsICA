@@ -29,6 +29,32 @@
             @Html.DisplayFor(model => model.Staff.Role)
         </dd>
     </dl>
+
+    @* Upcoming Event Assignments Section *@
+    <h4><b>Upcoming Event Assignments (@Model.UpcomingAssignments.Count)</b></h4>
+    @if (Model.UpcomingAssignments.Count > 0)
+    {
+        <ul>
+            @foreach (var assignment in Model.UpcomingAssignments)
+            {
+                <li>
+                    @($"Event: {assignment.Event?.EventName}")
+                    <br />
+                    @($"Date: {assignment.Event?.EventDate}")
+                    <br />
+                    @($"Type: {assignment.Event?.EventType}")
+                    <br />
+                    @($"Assignment: {assignment.StaffingName}")
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No upcoming event assignments for this staff member.</p>
+    }
+    <hr />
+
     <div>
         <a asp-page="./Edit" asp-route-id="@Model.Staff.EventStaffId">Edit</a> |
         <a asp-page="./Index">Back to List</a>

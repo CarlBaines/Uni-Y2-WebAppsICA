@@ -22,6 +22,9 @@ namespace Apex.Events.Pages.Staffs
         [BindProperty]
         public Staff Staff { get; set; } = default!;
 
+        // Display property for upcoming assignments where staff is assigned.
+        public List<Staffing> UpcomingAssignments { get; set; } = [];
+
         // On get async method to retrieve staff details
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -37,6 +40,15 @@ namespace Apex.Events.Pages.Staffs
                 return NotFound();
             }
             Staff = staff;
+
+            // Retrieve upcoming assignments for the staff member
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            UpcomingAssignments = await _context.Staffings
+                .Include(s => s.Event)
+                .Where(s => s.EventStaffId == id && s.Event != null && s.Event.EventDate >= today)
+                .OrderBy(s => s.Event!.EventDate)
+                .ToListAsync();
+
             return Page();
         }
     }

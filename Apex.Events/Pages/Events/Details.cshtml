@@ -6,7 +6,7 @@
 }
 
 
-<div class="center-container">
+<div class="center-container-scrollable">
     <h1><b>Event - Details</b></h1>
     <hr />
     <dl class="row">
@@ -37,6 +37,79 @@
             @Html.DisplayFor(v => v.Event.VenueCode)
         </dd>
     </dl>
+
+    @* Assigned Staff Section *@
+    <h4><b>Assigned Staff (Total: @Model.AssignedStaff.Count)</b></h4>
+    @if (Model.AssignedStaff.Count > 0)
+    {
+        <ul>
+            @foreach (var staffing in Model.AssignedStaff)
+            {
+                <li>
+                    @($"Assignment: {staffing.StaffingName}")
+                    <br />
+                    @($"Staff: {staffing.Staff?.FirstName} {staffing.Staff?.LastName}")
+                    <br />
+                    @($"Role: {staffing.Staff?.Role}")
+                    <br />
+                    <form method="post" asp-page-handler="RemoveStaff" asp-route-staffingId="@staffing.StaffingId" style="display:inline;">
+                        <input type="hidden" asp-for="EventId" />
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No staff assigned to this event yet.</p>
+    }
+
+    @*Add Staff Form*@
+    @if (Model.AvailableStaff.Count > 0)
+    {
+        <form method="post" asp-page-handler="AddStaff">
+            <input type="hidden" asp-for="EventId" />
+            <label class="control-label">Add Staff Member</label>
+            <select asp-for="SelectedStaffId" class="form-control" asp-items="Model.AvailableStaff">
+                <option value="">-- Select staff --</option>
+            </select>
+            <label class="control-label">Assignment Name</label>
+            <input asp-for="NewStaffingName" class="form-control" placeholder="e.g., Event Coordinator" />
+            <br />
+            <button type="submit" class="btn btn-primary">Add Staff</button>
+        </form>
+    }
+    else
+    {
+        <p>All available staff are already assigned.</p>
+    }
+
+    @if (!Model.HasFirstAider)
+    {
+        <div class="alert alert-warning" role="alert">
+            <strong>⚠️ Warning:</strong> No first aider is currently assigned to this event.
+        </div>
+    }
+    <hr />
+
+    <div class="col-md-4">
+        <br />
+        <form method="post">
+            <input type="hidden" asp-for="EventId" />
+            <h5><b><label asp-for="SelectedVenueCode">Change Venue</label></b></h5>
+            @* Dropdown for venue reservation *@
+            <select asp-for="SelectedVenueCode" class="form-control" asp-items="Model.Venues">
+                <option value="">-- Reserve venue --</option>
+            </select>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Reserve Venue" class="btn btn-primary" />
+            </div>
+            <br />
+            <hr />
+        </form>
+    </div>
 
     @* Displays total booked guest count *@
     <h4><b>@($"Booked Guests: (Total Count of Guests: {Model.Event.GuestBookings!.Count})")</b></h4>
@@ -94,21 +167,6 @@
         <a class="btn btn-primary" asp-page="./AddFoodBooking" asp-route-id="@Model.Event.EventId">Add Food Booking</a>
     }
 
-    <div class="col-md-4">
-        <br />
-        <form method="post">
-            <input type="hidden" asp-for="EventId" />
-            <h5><b><label asp-for="SelectedVenueCode">Change Venue</label></b></h5>
-            @* Dropdown for venue reservation *@
-            <select asp-for="SelectedVenueCode" class="form-control" asp-items="Model.Venues">
-                <option value="">-- Reserve venue --</option>
-            </select>
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Reserve Venue" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
     <div>
         <a asp-page="./Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
         <a asp-page="./Index">Back to List</a>

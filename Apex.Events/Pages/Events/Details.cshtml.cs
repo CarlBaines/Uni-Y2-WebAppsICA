@@ -32,6 +32,12 @@ namespace Apex.Events.Pages.Events
         public string? VenueName { get; set; }
         // Display property to hold list of venues
         public List<SelectListItem> Venues { get; set; } = [];
+        // Display property for assigned staff
+        public List<Staffing> AssignedStaff { get; set; } = [];
+        // Display property for available staff dropdown (staff that are not assigned)
+        public List<SelectListItem> AvailableStaff { get; set; } = [];
+
+        public bool HasFirstAider { get; set; }
 
         // Bind property for the user-selected venue code from the dropdown
         [BindProperty]
@@ -41,6 +47,12 @@ namespace Apex.Events.Pages.Events
         [BindProperty]
         public int EventId { get; set; }
 
+        // Bind properties for adding staff
+        [BindProperty]
+        public int? SelectedStaffId { get; set; }
+        [BindProperty]
+        public string? NewStaffingName { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -48,10 +60,12 @@ namespace Apex.Events.Pages.Events
                 return NotFound();
             }
 
-            // Retrieve GuestBookings and associated Guests
+            // Retrieve GuestBookings, associated Guests and Staffing.
             var evt = await _context.Events
                 .Include(e => e.GuestBookings!)
-                .ThenInclude(gb => gb.Guest)
+                    .ThenInclude(gb => gb.Guest)
+                .Include(e => e.Staffings!)
+                    .ThenInclude(s => s.Staff)
                 .FirstOrDefaultAsync(m => m.EventId == id);
 
             if (evt == null)
@@ -68,6 +82,27 @@ namespace Apex.Events.Pages.Events
 
             // Set the selected venue to the event's current venue
             SelectedVenueCode = evt.VenueCode;
+
+            // Retrieves the staff assigned to the event or an empty list if none are assigned
+            AssignedStaff = evt.Staffings ?? [];
+
+            // Determine if any assigned staff have the role of "First Aider"
+            HasFirstAider = AssignedStaff.Any(s => s.Staff != null &&
+                s.Staff.Role.Contains("First Aider", StringComparison.OrdinalIgnoreCase));
+
+            // Retrieve IDs of assigned staff
+            var assignedStaffIds = AssignedStaff.Select(s => s.EventStaffId).ToList();
+
+            // Retrieve available staff for the dropdown (staff not already assigned to the event)
+            var availableStaffList = await _context.Staff
+                .Where(s => !assignedStaffIds.Contains(s.EventStaffId))
+                .ToListAsync();
+
+            AvailableStaff = availableStaffList.Select(s => new SelectListItem
+            {
+                Value = s.EventStaffId.ToString(),
+                Text = $"{s.FirstName} {s.LastName} ({s.Role})"
+            }).ToList();
 
             // Retrieve FoodBookings using the service
             FoodBookings = (await _foodBookingsService.GetFoodBookingsForEventAsync(evt.EventId)).ToList();
@@ -147,6 +182,81 @@ namespace Apex.Events.Pages.Events
                 return Page();
             }
         }
+
+        // Helper method to add staff to the event
+        public async Task<IActionResult> OnPostAddStaffAsync()
+        {
+            // Validate selection from dropdown and staffing name.
+            if (SelectedStaffId == null || SelectedStaffId == 0 || string.IsNullOrWhiteSpace(NewStaffingName))
+            {
+                ModelState.AddModelError(string.Empty, "Select a staff member and provide an assignment name.");
+                return Page();
+            }
+
+            // Check if staff is already assigned to the event
+            var existingStaffing = await _context.Staffings
+                .FirstOrDefaultAsync(s => s.EventId == EventId && s.EventStaffId == SelectedStaffId);
+
+            // If already assigned, return error
+            if (existingStaffing != null)
+            {
+                ModelState.AddModelError(string.Empty, "Staff member is already assigned to this event.");
+                return Page();
+            }
+
+            // Create new Staffing record
+            var staffing = new Staffing
+            {
+                StaffingName = NewStaffingName,
+                EventStaffId = SelectedStaffId.Value,
+                EventId = EventId
+            };
+
+            // try, catch block to handle potential database errors when adding staff
+            try
+            {
+                _context.Staffings.Add(staffing);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                ModelState.AddModelError(string.Empty, $"Error adding staff to the event: {e.Message}");
+                return Page();
+            }
+
+            // Redirect to the same page to reflect changes.
+            return RedirectToPage(new { id = EventId });
+        }
+
+        // Helper method to remove staff from an event.
+        public async Task<IActionResult> OnPostRemoveStaffAsync(int staffingId)
+        {
+            // Retrieve the staffing record to be removed.
+            var staffing = await _context.Staffings.FirstOrDefaultAsync(s => s.StaffingId == staffingId && s.EventId == EventId);
+
+            if(staffing == null)
+            {
+                return NotFound();
+            }
+
+            // try, catch block to handle potential database errors when removing staff
+            try
+            {
+                _context.Staffings.Remove(staffing);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                ModelState.AddModelError(string.Empty, $"Error occurred attempting to remove staff: {e.Message}");
+                return Page();
+            }
+
+            // Redirect to the same page to reflect changes.
+            return RedirectToPage(new { id = EventId });
+        }
+
+
+            
     }
        
 }

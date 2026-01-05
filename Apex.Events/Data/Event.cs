@@ -19,6 +19,8 @@ namespace Apex.Events.Data
         // Foreign key to the Venue entity.
         [Required]
         public string VenueCode { get; set; } = string.Empty;
+        // Soft delete flag to indicate if the event is cancelled or not.
+        public bool IsCancelled { get; set; } = false;
         // Navigation property to the Staffing entity.
         public List<Staffing>? Staffings { get; set; }
         // Navigation property to the GuestBooking entity.

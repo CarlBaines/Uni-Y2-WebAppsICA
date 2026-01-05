@@ -21,6 +21,7 @@ namespace Apex.Events.Pages.Events
         // Dropdown items
         public List<SelectListItem> EventTypeItems { get; set; } = [];
         public List<SelectListItem> VenueItems { get; set; } = [];
+        public List<SelectListItem> StaffItems { get; set; } = [];
 
         public CreateModel(Apex.Events.Data.EventsDbContext context, EventTypesService eventTypesService, VenuesService venuesService, MenuService menuService)
         {
@@ -39,6 +40,13 @@ namespace Apex.Events.Pages.Events
         // BindProperty to bind the Event model
         [BindProperty]
         public Event Event { get; set; } = default!;
+
+        // BindProperty for selected staff members.
+        [BindProperty]
+        public List<int> SelectedStaffIds { get; set; } = [];
+        // BindProperty for staffing names.
+        [BindProperty]
+        public List<string> StaffingNames { get; set; } = [];
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -75,6 +83,24 @@ namespace Apex.Events.Pages.Events
                 //reservationReference = reservation.Reference;
                 _context.Events.Add(Event);
                 await _context.SaveChangesAsync();
+
+                // Add staff assignments if any were selected
+                if(SelectedStaffIds.Count > 0)
+                {
+                    for(int i = 0; i < SelectedStaffIds.Count; i++)
+                    {
+                        var staffing = new Staffing
+                        {
+                            EventId = Event.EventId,
+                            EventStaffId = SelectedStaffIds[i],
+                            StaffingName = i < StaffingNames.Count && !string.IsNullOrWhiteSpace(StaffingNames[i])
+                                ? StaffingNames[i]
+                                : "Staff Assignment"
+                        };
+                        _context.Staffings.Add(staffing);
+                    }
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (DbUpdateException e)
             {
@@ -109,6 +135,13 @@ namespace Apex.Events.Pages.Events
         {
             EventTypeItems = await _eventTypesService.GetEventTypesSelectListAsync();
             VenueItems = await _venuesService.GetVenuesSelectListAsync();
+            // Populate staff dropdown
+            var staffList = await _context.Staff.ToListAsync();
+            StaffItems = staffList.Select(s => new SelectListItem
+            {
+                Value = s.EventStaffId.ToString(),
+                Text = $"{s.FirstName} {s.LastName} ({s.Role})"
+            }).ToList();
         }
     }
 }
