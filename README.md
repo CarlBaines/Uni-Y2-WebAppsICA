@@ -1,6 +1,6 @@
 # Apex Events Management System
 
-## 📌 Overview
+## Overview
 This project was developed as part of my **Web Apps & Services (CIS2058-N)** in-course assessment at university.
 
 It is an **ASP.NET Core 8.0 Razor Pages web application** designed as an event management system for a hypothetical events company called **Apex**. The system allows staff to manage:
@@ -15,7 +15,7 @@ The solution follows a **service-oriented architecture**, with separate web serv
 
 ---
 
-## 🧩 Solution Structure
+## Solution Structure
 The solution consists of three main components:
 
 - **Apex.Events**  
@@ -30,7 +30,7 @@ The solution consists of three main components:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 - ASP.NET Core 8.0
 - Razor Pages
 - Entity Framework Core
@@ -39,7 +39,7 @@ The solution consists of three main components:
 
 ---
 
-## ⚠️ Key Problems, Challenges & Resolutions
+## Key Problems, Challenges & Resolutions
 The following issues were encountered during development and demonstrate problem-solving, debugging, and design decisions across Razor Pages, EF Core, and API integration.
 
 ### 🔹 Apex.Catering – Deletion of Food Items
@@ -169,4 +169,34 @@ Added a PageModel check to hide the booking link if a booking already exists.
 
 ---
 
-## 📁 File Structure
+### 🔹 Duplicate Guests and Events
+**Problem** <br>
+The app intially allowed duplicate Guests and Events to be created, risking data inconsistency.
+
+**Resolution** <br>
+Added validation checks in the Razor Page handlers to detect existing records and prevent duplicate isnerts, with clear validation feedback to the user (model state errors).
+
+---
+
+### 🔹 Venue Reservation/Freeing Logic Using Apex.Venues
+**Problem** <br>
+The initial design attempted to reserve and free venues via the Venues API during event creation and editing. This caused event creation failures, unpopulated venue dropdowns and unreliable reservation state management.
+
+**Resolution/Design Decision** <br>
+The reservation/freeing logic was removed to restore reliable event creation. Venue selection was retained for display purposes.
+
+## Design Choices & Architectural Decisions
+### 🔹 Staffing Assignment Management
+**Design Decision** <br>
+Staffing adjustments were implemented on the Event Details page rather than the Staff Details page.
+**Rationale** 
+- Directly aligns with the requirement “Adjust the staffing of an Event”
+- Matches the natural event-planning workflow
+- Centralises all event-related management (guests, food, venue, staff)
+- Improves usability by avoiding unnecessary navigation
+
+## File Structure
+/Apex.Events <br>
+/Apex.Catering <br>
+/Apex.Venues (provided – not modified) <br>
+README.md
