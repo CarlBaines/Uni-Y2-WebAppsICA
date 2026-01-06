@@ -16,7 +16,12 @@ namespace Apex.Catering.Data
         {
             var folder = Environment.SpecialFolder.MyDocuments;
             var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Combine(path, "C# Databases/ICA Databases", "Apex.Catering.db");
+
+            // This is the path where the SQLite database file will be stored on my laptop.
+            //DbPath = Path.Combine(path, "C# Databases/ICA Databases", "Apex.Catering.db");
+
+            // This is a simplified path for use on other machines.
+            DbPath = Path.Join(path, "Apex.Catering.db");
 
             var dir = Path.GetDirectoryName(DbPath);
             if (!string.IsNullOrWhiteSpace(dir))

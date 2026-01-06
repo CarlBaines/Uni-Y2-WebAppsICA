@@ -17,7 +17,12 @@ namespace Apex.Events.Data
         {
             var folder = Environment.SpecialFolder.MyDocuments;
             var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Combine(path, "C# Databases/ICA Databases", "events.db");
+
+            // This is the path where the SQLite database file will be stored on my laptop. 
+            //DbPath = Path.Combine(path, "C# Databases/ICA Databases", "events.db");
+
+            // This is a simplified path for use on other machines.
+            DbPath = Path.Join(path, "events.db");
 
             var directory = Path.GetDirectoryName(DbPath);
             if (!string.IsNullOrWhiteSpace(directory))
