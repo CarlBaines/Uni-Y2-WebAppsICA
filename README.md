@@ -186,17 +186,77 @@ The initial design attempted to reserve and free venues via the Venues API durin
 The reservation/freeing logic was removed to restore reliable event creation. Venue selection was retained for display purposes.
 
 ## Design Choices & Architectural Decisions
-### 🔹 Staffing Assignment Management
+### 🔹 Event-Centric Workflow
+**Design Decision** <br>
+Core management actions were centred around Event Details rather than distributing edit actions across Guest/Staff pages.
+
+**Spec Alignment** <br>
+- Supports the workflow for booking guests onto events, assigning staff, and assigning food orders from the “event” perspective. 
+- Aligns with the WOULD requirement that Event Details must include Venue, Staff, and Guests (more detailed than the Event List).
+
+### 🔹 Staffing Assignment Implemented on Event Details
 **Design Decision** <br>
 Staffing adjustments were implemented on the Event Details page rather than the Staff Details page.
-**Rationale** 
-- Directly aligns with the requirement “Adjust the staffing of an Event”
-- Matches the natural event-planning workflow
-- Centralises all event-related management (guests, food, venue, staff)
-- Improves usability by avoiding unnecessary navigation
+
+**Spec Alignment** <br>
+- Direct match to the SHOULD requirement: “Adjust the staffing of an Event”. 
+- Keeps all event operations in one place alongside Guests/Venue/Food, improving the “intranet prototype” workflow expected beyond scaffolding.
+
+### 🔹 Dedicated Pages for Booking Workflows
+**Design Decision** <br>
+Booking actions (e.g., guest booking, food booking) were moved to dedicated pages rather than being tightly coupled to Event Create/Edit.
+
+**Spec Alignment** <br>
+- Keeps Event Create focused on the MUST minimum fields (title/date/type) while booking tasks map cleanly to separate requirements (guest booking + food booking). 
+- Reduces validation and ModelState issues, helping meet the “customised workflow beyond scaffolding” expectation.
+
+### 🔹 Venues API Reservation Logic Removed (Stability Over Completeness)
+**Design Decision** <br>
+Venue reservation/freeing logic via Apex.Venues was scrapped after it destabilised event creation and broke page workflows.
+
+**Spec Alignmnet** <br>
+- The spec lists venue reservation/freeing as a SHOULD requirement, but also prioritises a product that runs reliably without runtime errors and has a usable workflow. 
+- Apex.Venues is explicitly provided and not to be modified, so the Events app must handle failure states gracefully without trying to “fix” the service.
 
 ## File Structure
 /Apex.Events <br>
 /Apex.Catering <br>
 /Apex.Venues (provided – not modified) <br>
 README.md
+
+## How to Run the Project (Important: Pre-Populated Databases Included)
+### 1) Open and build
+1. Extract the submitted `.zip`
+2. Open the `.sln` in **Visual Studio**
+3. Build the solution (**Build > Build Solution**) to ensure all projects compile
+
+### 2) Copy the provided SQLite database files (required on a new machine)
+When testing on a different machine I encountered a **500 Internal Server Error** due to a **data population issue with the Venues tables**.
+
+To ensure the solution runs reliably for assessment, I have included **pre-populated SQLite database files**.  
+**Before running the solution, copy these `.db` files into your Windows Documents folder:**
+
+Copy to:
+`C:\Users\<YourUser>\Documents\`
+
+Files to copy:
+- `Apex.Catering.db` (Catering API database)
+- `Apex.Venues.db` (Venues service database)
+- `events.db` (Events web app database)
+
+> Keep the filenames exactly the same as provided.
+
+### 3) Run with multiple startup projects
+1. In Visual Studio: **Solution Properties > Startup Project**
+2. Select **Multiple startup projects**
+3. Set these projects to **Start**:
+   - `Apex.Events`
+   - `Apex.Catering`
+   - `Apex.Venues`
+4. Run (F5)
+
+### 4) Expected behaviour
+- `Apex.Events` opens in the browser (Razor Pages UI)
+- `Apex.Events` communicates with:
+  - `Apex.Catering` for food items/menus/bookings
+  - `Apex.Venues` for venues/event types
