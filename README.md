@@ -260,3 +260,5 @@ Files to copy:
 - `Apex.Events` communicates with:
   - `Apex.Catering` for food items/menus/bookings
   - `Apex.Venues` for venues/event types
+
+https://github.com/user-attachments/assets/6c2321d5-3883-4347-8e52-229602d39470
